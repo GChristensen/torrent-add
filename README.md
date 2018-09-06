@@ -9,8 +9,8 @@ directories in uTorrent. Very useful, if you have uTorrent on a dedicated machin
 
 
 There are couple of setting should be configured in uTorrent:
-* Advanced/Webu UI/Enable Web UI
-* Directories/Put new downloads in:
+* 'Advanced' | 'Webu UI' | 'Enable Web UI'
+* 'Directories' | 'Put new downloads in' (the files will be downloaded into subdirectories of this folder)
 
 You also need to provide uTorrent API url, username and password in addon settings.
 
