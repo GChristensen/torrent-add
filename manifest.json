@@ -1,0 +1,33 @@
+{
+
+  "manifest_version": 2,
+  "name": "Add torrent",
+  "version": "1.0.0.3",
+
+  "description": "",
+
+  "applications": {
+    "gecko": {
+      "id": "torrent-add@firefox",
+      "strict_min_version": "57.0"
+    }
+  },
+
+  "icons": {
+    "48": "res/icon48.png",
+    "96": "res/icon96.png",
+    "16": "res/icon16.png"
+  },
+
+  "options_ui": {
+    "page": "options.html",
+    "browser_style": true
+  },
+
+  "background": {
+    "scripts": ["background.js"]
+  },
+
+  "permissions": ["<all_urls>", "tabs", "storage", "contextMenus"]
+
+}
