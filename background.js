@@ -8,49 +8,55 @@ const defaultSettings = {
       };
 
 function makeHost(host) {
-    let result = host.replace(/^https?:\/\//, "");
-    return result.endsWith("/")? result: result + "/";
+    if (host) {
+        let result = host.replace(/^https?:\/\//, "");
+        return result.endsWith("/") ? result : result + "/";
+    }
 }
 
-browser.storage.local.get("settings").then(({settings}) => {
+function withSettings(callback) {
+    browser.storage.local.get("settings").then(({settings}) => {
+        if (!settings) {
+            settings = defaultSettings;
+            browser.storage.local.set({settings: defaultSettings});
+        }
 
-  if (!settings) {
-      settings = defaultSettings;
-      browser.storage.local.set({settings: defaultSettings});
-  }
+        callback(settings);
+    });
+}
 
-  settings.folders.split(":").forEach((folder) => {
-    browser.contextMenus.create({
-      id: folder,
-      title: folder,
-      contexts: ["link"]
-    });  
-  });
-
-  function onAPIToken(f)
-  {
+function onAPIToken(settings, f) {
     let xhr = new XMLHttpRequest();
     xhr.open("GET", "http://" + settings.user + ":" + settings.password + "@"
-        + makeHost(settings.host) + "token.html", true);
+    + makeHost(settings.host) + "token.html", true);
     xhr.responseType = "document";
 
     xhr.onload = function(e) {
-        console.log(this.status);
+
         if (this.status === 200) {
             let token = this.response.getElementById("token").textContent;
             let cookie = this.getResponseHeader("Set-Cookie");
             if (cookie)
                 cookie = cookie.split(";")[0];
             f(token, cookie);
-        }};
+        }
+        else  {
+            browser.notifications.create("cake-notification", {
+                "type": "basic",
+                "iconUrl": browser.extension.getURL("res/icon96.png"),
+                "title": "Add Torrent",
+                "message": "uTorrent Web API returns " + this.status + " status code. Please check your settings."
+            });
+        }
+    };
 
     xhr.send();
-  }
+}
 
-  function addMagnet(tab, page, link, where) {
-    onAPIToken(function (token, cookie) {               
+function addMagnet(settings, tab, page, link, where) {
+    onAPIToken(settings, function (token, cookie) {
       let params = "?action=add-url&download_dir=0&token=" + token + "&s=" +  encodeURI(link);
-       
+
       if (where !== ROOT_FOLDER)
         params += "&path=" + where;
 
@@ -62,15 +68,15 @@ browser.storage.local.get("settings").then(({settings}) => {
         console.log(this.status);
         console.log(this.response);
       };
-               
-    });
-  }
 
-  function downloadLink (tab, page, link, where) {
+    });
+}
+
+function downloadLink (settings, tab, page, link, where) {
     let xhr = new XMLHttpRequest();
     xhr.open("GET", link, true);
     xhr.responseType = "blob";
-     
+
     xhr.onload = function(e) {
         if (this.status === 200) {
 
@@ -83,12 +89,12 @@ browser.storage.local.get("settings").then(({settings}) => {
 
             let torrent_data = this.response;
 
-            onAPIToken(function (token, cookie) {               
+            onAPIToken(settings, function (token, cookie) {
                 let params = "?action=add-file&download_dir=0&token=" + token;
 
                 if (where !== ROOT_FOLDER)
                     params += "&path=" + where;
-                
+
                 let form = new FormData();
                 form.append("torrent_file", torrent_data, name);
 
@@ -100,21 +106,32 @@ browser.storage.local.get("settings").then(({settings}) => {
                     console.log(this.status);
                     console.log(this.response);
                 };
-                
+
             });
         }
     };
     xhr.send();
-  }
+}
 
-  browser.runtime.onMessage.addListener(msg => {console.log("external msg"); console.log(msg)});
-
-  browser.contextMenus.onClicked.addListener(function(info, tab) {
+browser.contextMenus.onClicked.addListener(function(info, tab) {
     if (info.linkUrl && info.linkUrl.startsWith("magnet:"))
-        addMagnet(tab, info.pageUrl, info.linkUrl, info.menuItemId);
+        withSettings(settings => {
+            addMagnet(settings, tab, info.pageUrl, info.linkUrl, info.menuItemId)
+        });
     else
-        downloadLink(tab, info.pageUrl, info.linkUrl, info.menuItemId);
+        withSettings(settings => {
+            downloadLink(settings, tab, info.pageUrl, info.linkUrl, info.menuItemId);
+        });
+});
 
-  });
-
+withSettings(settings => {
+    settings.folders.split(":").forEach((folder) => {
+        if (folder) {
+            browser.contextMenus.create({
+                id: folder,
+                title: folder,
+                contexts: ["link"]
+            });
+        }
+    });
 });

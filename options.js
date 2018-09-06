@@ -1,11 +1,15 @@
 function saveOptions(e) {
-  e.preventDefault();
-  browser.storage.local.set({settings: {
-    folders: document.querySelector("#folders").value,
-    host: document.querySelector("#host").value,
-    user: document.querySelector("#user").value,
-    password: document.querySelector("#password").value
-  }})
+  if (e) {
+      e.preventDefault();
+      browser.storage.local.set({
+          settings: {
+              folders: document.querySelector("#folders").value,
+              host: document.querySelector("#host").value,
+              user: document.querySelector("#user").value,
+              password: document.querySelector("#password").value
+          }
+      })
+  }
 }
 
 function restoreOptions() {
@@ -24,8 +28,35 @@ function restoreOptions() {
   getting.then(setCurrentChoice, onError);
 }
 
+function removeMenus(items, callback) {
+  if (items.length > 0)
+      browser.contextMenus.remove(items.pop()).then(() => removeMenus(items, callback));
+  else
+    callback();
+}
+
+function createMenus() {
+    let getting = browser.storage.local.get("settings");
+
+    getting.then(({settings}) => {
+        removeMenus(settings.folders.split(":"), () => {
+          document.querySelector("#folders").value.split(":").forEach((folder) => {
+              if (folder) {
+                  browser.contextMenus.create({
+                      id: folder,
+                      title: folder,
+                      contexts: ["link"]
+                  });
+              }
+          });
+      });
+    });
+}
+
 document.addEventListener("DOMContentLoaded", restoreOptions);
-document.getElementById("folders").addEventListener("change", saveOptions);
+document.getElementById("folders").addEventListener("change", (e) => {createMenus(); saveOptions(e);});
 document.getElementById("host").addEventListener("change", saveOptions);
 document.getElementById("user").addEventListener("change", saveOptions);
 document.getElementById("password").addEventListener("change", saveOptions);
+
+createMenus();

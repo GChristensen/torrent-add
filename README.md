@@ -1,11 +1,11 @@
 # Add torrent
 
-[DOWNLOAD (Firefox Add-On)](https://github.com/GChristensen/torrent-add/releases/download/v0.1.0.3/add_torrent.xpi)
+[DOWNLOAD (Firefox Add-On)](https://github.com/GChristensen/torrent-add/releases/download/v0.1.0.4/add_torrent.xpi)
 
 ![screen](screen.png?raw=true)
 
-Allows to instantly begin download of a torrent or magnet link into the specified directory 
-in uTorrent. Very useful, if you have uTorrent on a dedicated machine.
+Allows to instantly begin download of a torrent or magnet link into a configurable set of
+directories in uTorrent. Very useful, if you have uTorrent on a dedicated machine.
 
 
 There are couple of setting should be configured in uTorrent:
