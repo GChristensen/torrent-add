@@ -12,7 +12,7 @@ Allows to instantly begin download of a torrent or magnet link into a configurab
 directories in uTorrent. Very useful, if you have uTorrent on a dedicated machine.
 
 
-There is couple of setting should be configured in uTorrent:
+There is a couple of setting should be configured in uTorrent:
 * 'Advanced' | 'Webu UI' | 'Enable Web UI'
 * 'Directories' | 'Put new downloads in' (the files will be downloaded into subdirectories of this folder)
 
