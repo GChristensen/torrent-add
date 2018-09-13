@@ -39,7 +39,7 @@ function createMenus() {
     let getting = browser.storage.local.get("settings");
 
     getting.then(({settings}) => {
-        removeMenus(settings.folders.split(":"), () => {
+        chrome.contextMenus.removeAll(() => {
           document.querySelector("#folders").value.split(":").forEach((folder) => {
               if (folder) {
                   browser.contextMenus.create({
@@ -54,9 +54,9 @@ function createMenus() {
 }
 
 document.addEventListener("DOMContentLoaded", restoreOptions);
-document.getElementById("folders").addEventListener("change", (e) => {createMenus(); saveOptions(e);});
-document.getElementById("host").addEventListener("change", saveOptions);
-document.getElementById("user").addEventListener("change", saveOptions);
-document.getElementById("password").addEventListener("change", saveOptions);
+document.getElementById("folders").addEventListener("blur", (e) => {createMenus(); saveOptions(e);});
+document.getElementById("host").addEventListener("blur", saveOptions);
+document.getElementById("user").addEventListener("blur", saveOptions);
+document.getElementById("password").addEventListener("blur", saveOptions);
 
 createMenus();

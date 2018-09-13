@@ -2,7 +2,7 @@
 
   "manifest_version": 2,
   "name": "Add torrent",
-  "version": "1.0.0.4",
+  "version": "1.0.0.8",
 
   "description": "",
 
@@ -28,6 +28,6 @@
     "scripts": ["background.js"]
   },
 
-  "permissions": ["<all_urls>", "tabs", "storage", "contextMenus", "notifications"]
+  "permissions": ["<all_urls>", "tabs", "storage", "contextMenus", "notifications", "webRequest", "webRequestBlocking"]
 
 }

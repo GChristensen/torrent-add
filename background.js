@@ -113,6 +113,20 @@ function downloadLink (settings, tab, page, link, where) {
     xhr.send();
 }
 
+chrome.webRequest.onBeforeSendHeaders.addListener(
+    (requestDetails) => {
+        for (var header of requestDetails.requestHeaders) {
+            if (header.name.toLowerCase() === "cookie") {
+                if (header.value && header.value.indexOf("bb_dl=") === -1)
+                    header.value = header.value + "; bb_dl=" + requestDetails.url.split("=")[1];
+            }
+        }
+        return {requestHeaders: requestDetails.requestHeaders};
+    },
+    {urls: ["*://*/forum/dl.php?t=*"]},
+    ["blocking", "requestHeaders"]
+);
+
 browser.contextMenus.onClicked.addListener(function(info, tab) {
     if (info.linkUrl && info.linkUrl.startsWith("magnet:"))
         withSettings(settings => {
