@@ -15,10 +15,10 @@ function makeHost(host) {
 }
 
 function withSettings(callback) {
-    browser.storage.local.get("settings").then(({settings}) => {
+    chrome.storage.local.get("settings", ({settings}) => {
         if (!settings) {
             settings = defaultSettings;
-            browser.storage.local.set({settings: defaultSettings});
+            chrome.storage.local.set({settings: defaultSettings});
         }
 
         callback(settings);
@@ -41,9 +41,9 @@ function onAPIToken(settings, f) {
             f(token, cookie);
         }
         else  {
-            browser.notifications.create("cake-notification", {
+            chrome.notifications.create("cake-notification", {
                 "type": "basic",
-                "iconUrl": browser.extension.getURL("res/icon96.png"),
+                "iconUrl": chrome.extension.getURL("res/icon96.png"),
                 "title": "Add Torrent",
                 "message": "uTorrent Web API returns " + this.status + " status code. Please check your settings."
             });
@@ -127,7 +127,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
     ["blocking", "requestHeaders"]
 );
 
-browser.contextMenus.onClicked.addListener(function(info, tab) {
+chrome.contextMenus.onClicked.addListener(function(info, tab) {
     if (info.linkUrl && info.linkUrl.startsWith("magnet:"))
         withSettings(settings => {
             addMagnet(settings, tab, info.pageUrl, info.linkUrl, info.menuItemId)
@@ -141,7 +141,7 @@ browser.contextMenus.onClicked.addListener(function(info, tab) {
 withSettings(settings => {
     settings.folders.split(":").forEach((folder) => {
         if (folder) {
-            browser.contextMenus.create({
+            chrome.contextMenus.create({
                 id: folder,
                 title: folder,
                 contexts: ["link"]

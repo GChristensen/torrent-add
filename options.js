@@ -1,7 +1,7 @@
 function saveOptions(e) {
   if (e) {
       e.preventDefault();
-      browser.storage.local.set({
+      chrome.storage.local.set({
           settings: {
               folders: document.querySelector("#folders").value,
               host: document.querySelector("#host").value,
@@ -24,25 +24,15 @@ function restoreOptions() {
     console.log(`Error: ${error}`);
   }
 
-  let getting = browser.storage.local.get("settings");
-  getting.then(setCurrentChoice, onError);
-}
-
-function removeMenus(items, callback) {
-  if (items.length > 0)
-      browser.contextMenus.remove(items.pop()).then(() => removeMenus(items, callback));
-  else
-    callback();
+  chrome.storage.local.get("settings", setCurrentChoice);
 }
 
 function createMenus() {
-    let getting = browser.storage.local.get("settings");
-
-    getting.then(({settings}) => {
+    chrome.storage.local.get("settings", ({settings}) => {
         chrome.contextMenus.removeAll(() => {
           document.querySelector("#folders").value.split(":").forEach((folder) => {
               if (folder) {
-                  browser.contextMenus.create({
+                  chrome.contextMenus.create({
                       id: folder,
                       title: folder,
                       contexts: ["link"]
