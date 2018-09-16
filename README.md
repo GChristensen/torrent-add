@@ -12,11 +12,16 @@ Allows to instantly begin download of a torrent or magnet link into a configurab
 directories in uTorrent. Very useful, if you have uTorrent on a dedicated machine.
 
 
-There is a couple of setting should be configured in uTorrent:
-* 'Advanced' | 'Webu UI' | 'Enable Web UI'
-* 'Directories' | 'Put new downloads in' (the files will be downloaded into subdirectories of this folder)
+There is a couple of setting should be configured:
+* uTorrent: 'Advanced' | 'Webu UI' | 'Enable Web UI'<br>
+![utorrent settings](utorrent-settings.png)
 
-You also need to provide uTorrent API url, username and password in the addon settings.
+* uTorrent: 'Directories' | 'Put new downloads in' (the files will be downloaded into the corresponding
+ subdirectories of this folder):<br>
+![directory settings](directory-settings.png)
 
-WARNING!: torrent links, which require `Referer' HTTP header, will not be added due
-to Firefox restrictions. 
+
+* You also need to provide uTorrent API url, username and password in the addon settings:<br>
+![addon settings](addon-settings.png)
+
+WARNING!: in some rare cases torrent links will not be added due to Firefox restrictions. 
