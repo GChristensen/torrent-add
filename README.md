@@ -1,7 +1,10 @@
 # Add torrent
 
-[DOWNLOAD (Firefox Add-On)](https://github.com/GChristensen/torrent-add/releases/download/v0.1.0.4/add_torrent.xpi)
-
+![Firefox](https://github.com/GChristensen/gchristensen.github.io/blob/master/firefox.png?raw=true)
+[Firefox Add-On](https://github.com/GChristensen/torrent-add/releases/download/v0.1.0.4/add_torrent.xpi)
+:: ![Chrome](https://github.com/GChristensen/gchristensen.github.io/blob/master/chrome.png?raw=true)
+[Chrome Extension](https://chrome.google.com/webstore/detail/add-torrent/ebigbooofepkiinneomglffcehbmjdel)
+ 
 `--------------------------------------------------------------------`
 
 ![screen](screen.png?raw=true)
