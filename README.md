@@ -5,11 +5,9 @@
 :: ![Chrome](https://github.com/GChristensen/gchristensen.github.io/blob/master/chrome.png?raw=true)
 [Chrome Extension](https://chrome.google.com/webstore/detail/add-torrent/ebigbooofepkiinneomglffcehbmjdel)
  
-`--------------------------------------------------------------------`
 
 ![screen](screen.png?raw=true)
 
-`--------------------------------------------------------------------`
 
 Allows to instantly begin download of a torrent or magnet link into a configurable set of
 directories in uTorrent. Very useful, if you have uTorrent on a dedicated machine.
