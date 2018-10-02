@@ -1,3 +1,4 @@
 theme: jekyll-theme-minimal
 title: Add Torrent extension
 description: Instantly add torrents to a customizable set of directories in uTorrent
+show_downloads: true
