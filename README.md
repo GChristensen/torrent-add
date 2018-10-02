@@ -1,4 +1,4 @@
-# Add torrent
+# Add Torrent
 
 ![Firefox](https://github.com/GChristensen/gchristensen.github.io/blob/master/firefox.png?raw=true)
 [Firefox Add-On](https://github.com/GChristensen/torrent-add/releases/download/v0.1.0.4/add_torrent.xpi)
