@@ -52,7 +52,9 @@
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
-                console.log(this.responseText);
+                    var release = JSON.parse(this.responseText);
+                    var link = document.getElementById("xpi-link");
+                    link.href = release.assets[0].browser_download_url;
                 }
             };
             xhr.open('GET', 'https://api.github.com/repos/gchristensen/torrent-add/releases/latest');
