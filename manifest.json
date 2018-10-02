@@ -2,16 +2,17 @@
 
   "manifest_version": 2,
   "name": "Add torrent",
-  "version": "1.0.0.8",
+  "version": "1.0.0.9",
 
-  "homepage_url": "https://github.com/GChristensen/torrent-add#readme",
+  "homepage_url": "https://gchristensen.github.io/torrent-add",
 
   "description": "",
 
   "applications": {
     "gecko": {
       "id": "torrent-add@firefox",
-      "strict_min_version": "57.0"
+      "strict_min_version": "57.0",
+      "update_url": "https://raw.githubusercontent.com/GChristensen/torrent-add/master/updates.json"
     }
   },
 

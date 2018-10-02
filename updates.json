@@ -1,0 +1,11 @@
+{
+  "addons": {
+    "ubiquitywe@firefox": {
+      "updates": [{
+          "version": "1.0.0.9",
+          "update_link": "https://github.com/GChristensen/torrent-add/releases/download/v0.1.0.9/add_torrent.xpi"
+        }
+      ]
+    }
+  }
+}
