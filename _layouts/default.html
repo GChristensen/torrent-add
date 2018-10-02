@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     {% seo %}
-    <link rel="stylesheet" href="{{ "/assets/css/style.css?v=" | append: site.github.build_revision | relative_url }}">
+    <link rel="stylesheet" href="{{ absolute_url "/assets/css/style.css?v=" | append: site.github.build_revision | relative_url }}">
     <!--[if lt IE 9]>
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
     <![endif]-->
@@ -40,7 +40,37 @@
     </header>
     <section>
 
-        {{ content }}
+        <h1 id="add-torrent">Add Torrent</h1>
+
+        <p><img src="https://github.com/GChristensen/gchristensen.github.io/blob/master/firefox.png?raw=true" alt="Firefox" />
+            <a href="https://github.com/GChristensen/torrent-add/releases/download/v0.1.0.4/add_torrent.xpi">Firefox Add-On</a>
+            :: <img src="https://github.com/GChristensen/gchristensen.github.io/blob/master/chrome.png?raw=true" alt="Chrome" />
+            <a href="https://chrome.google.com/webstore/detail/add-torrent/ebigbooofepkiinneomglffcehbmjdel">Chrome Extension</a></p>
+
+        <p><img src="screen.png?raw=true" alt="screen" /></p>
+
+        <p>Allows to instantly begin download of a torrent or magnet link into a configurable set of
+            directories in uTorrent. Very useful, if you have uTorrent on a dedicated machine.</p>
+
+        <p>There is a couple of setting should be configured:</p>
+        <ul>
+            <li>
+                <p>uTorrent: ‘Advanced’ | ‘Webu UI’ | ‘Enable Web UI’<br />
+                    <img src="/torrent-add/utorrent-settings.png" alt="utorrent settings" /></p>
+            </li>
+            <li>
+                <p>uTorrent: ‘Directories’ | ‘Put new downloads in’ (the files will be downloaded into the corresponding
+                    subdirectories of this folder):<br />
+                    <img src="/torrent-add/directory-settings.png" alt="directory settings" /></p>
+            </li>
+            <li>
+                <p>You also need to provide uTorrent API url, username and password in the addon settings:<br />
+                    <img src="/torrent-add/addon-settings.png" alt="addon settings" /></p>
+            </li>
+        </ul>
+
+        <p>WARNING!: in some rare cases torrent links will not be added due to Firefox restrictions.</p>
+
 
     </section>
     <footer>
