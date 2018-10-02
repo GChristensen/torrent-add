@@ -42,12 +42,23 @@
 
         <h1 id="add-torrent">Add Torrent</h1>
 
-        <p><img src="https://github.com/GChristensen/gchristensen.github.io/blob/master/firefox.png?raw=true" alt="Firefox" />
-            <a href="https://github.com/GChristensen/torrent-add/releases/download/v0.1.0.4/add_torrent.xpi">Firefox Add-On</a>
-            :: <img src="https://github.com/GChristensen/gchristensen.github.io/blob/master/chrome.png?raw=true" alt="Chrome" />
+        <p><img height="16px" width="16px" src="/firefox.png" alt="Firefox" />
+            <a id="xpi-link" href="#">Firefox Add-On</a>
+            :: <img height="16px" width="16px" src="/chrome.png" alt="Chrome" />
             <a href="https://chrome.google.com/webstore/detail/add-torrent/ebigbooofepkiinneomglffcehbmjdel">Chrome Extension</a></p>
 
-        <p><img src="screen.png?raw=true" alt="screen" /></p>
+        <script>
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log(JSON.parse(this.responseText));
+                }
+            };
+            xhr.open('GET', 'https://api.github.com/repos/gchristensen/torrent-add/releases/latest');
+            xhr.send();
+        </script>
+
+        <p><img src="/torrent-add/screen.png" alt="screen" /></p>
 
         <p>Allows to instantly begin download of a torrent or magnet link into a configurable set of
             directories in uTorrent. Very useful, if you have uTorrent on a dedicated machine.</p>
