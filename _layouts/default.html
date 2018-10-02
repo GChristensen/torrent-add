@@ -9,16 +9,6 @@
     <link rel="stylesheet" href="{{ "/assets/css/style.css?v=" | append: site.github.build_revision | relative_url }}">
     <!--[if lt IE 9]>
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script>
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function() {
-            //if (this.readyState == 4 && this.status == 200) {
-                console.log(this.responseText);
-            //}
-        };
-        xhr.open('GET', 'https://api.github.com/repos/gchristensen/torrent-add/releases/latest');
-        xhr.send();
-    </script>
     <![endif]-->
 </head>
 <body>
@@ -57,6 +47,18 @@
             :: <img height="16px" width="16px" src="/chrome.png" alt="Chrome" />
             <a href="https://chrome.google.com/webstore/detail/add-torrent/ebigbooofepkiinneomglffcehbmjdel">Chrome Extension</a>
         </p>
+
+        <script>
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                console.log(this.responseText);
+                }
+            };
+            xhr.open('GET', 'https://api.github.com/repos/gchristensen/torrent-add/releases/latest');
+            xhr.send();
+        </script>
+
         <p><img src="/torrent-add/screen.png" alt="screen" /></p>
 
         <p>Allows to instantly begin download of a torrent or magnet link into a configurable set of
