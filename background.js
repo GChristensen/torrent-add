@@ -53,7 +53,7 @@ function onAPIToken(settings, f) {
     xhr.send();
 }
 
-function addMagnet(settings, tab, page, link, where) {
+function addMagnet(settings, link, where) {
     onAPIToken(settings, function (token, cookie) {
       let params = "?action=add-url&download_dir=0&token=" + token + "&s=" +  encodeURI(link);
 
@@ -72,7 +72,7 @@ function addMagnet(settings, tab, page, link, where) {
     });
 }
 
-function downloadLink (settings, tab, page, link, where) {
+function downloadLink (settings, link, where) {
     let xhr = new XMLHttpRequest();
     xhr.open("GET", link, true);
     xhr.responseType = "blob";
@@ -127,14 +127,29 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
     ["blocking", "requestHeaders"]
 );
 
+chrome.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
+    switch (message.type) {
+        case "ADD_TORRENT":
+            if (message.url && message.url.startsWith("magnet:"))
+                withSettings(settings => {
+                    addMagnet(settings, message.url, message.folder)
+                });
+            else
+                withSettings(settings => {
+                    downloadLink(settings, message.url, message.folder);
+                });
+            break;
+    }
+});
+
 chrome.contextMenus.onClicked.addListener(function(info, tab) {
     if (info.linkUrl && info.linkUrl.startsWith("magnet:"))
         withSettings(settings => {
-            addMagnet(settings, tab, info.pageUrl, info.linkUrl, info.menuItemId)
+            addMagnet(settings, info.linkUrl, info.menuItemId)
         });
     else
         withSettings(settings => {
-            downloadLink(settings, tab, info.pageUrl, info.linkUrl, info.menuItemId);
+            downloadLink(settings, info.linkUrl, info.menuItemId);
         });
 });
 
