@@ -1,5 +1,5 @@
 import {ROOT_FOLDER} from "./constants.js";
-import {downloadFile, showNotification} from "./utils.js";
+import {downloadFileAsForm, showNotification} from "./utils.js";
 
 function adjustHostURL(url) {
     let result = url;
@@ -52,7 +52,7 @@ export class UTorrentClient {
     }
 
     async addTorrent(settings, link, category) {
-        const form = await downloadFile(link, "torrent_file");
+        const form = await downloadFileAsForm(link, "torrent_file");
 
         if (form) {
             const apiURL = await makeAPIURL(settings, "add-file", category);

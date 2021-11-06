@@ -19,7 +19,7 @@ function extractFileName(response) {
     return fileName;
 }
 
-export async function downloadFile(link, formField) {
+export async function downloadFileAsForm(link, formField) {
     try {
         const resp = await fetch(link);
 

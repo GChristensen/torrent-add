@@ -1,4 +1,4 @@
-import {downloadFile, showNotification} from "./utils.js";
+import {downloadFileAsForm, showNotification} from "./utils.js";
 
 function adjustHostURL(url) {
     let result = url;
@@ -80,7 +80,7 @@ export class QBittorrentClient {
     }
 
     async addTorrent(settings, link, category) {
-        const form = await downloadFile(link, "torrents");
+        const form = await downloadFileAsForm(link, "torrents");
         return addTorrent(settings, category, form);
     }
 }
