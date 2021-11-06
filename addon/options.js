@@ -6,7 +6,8 @@ function saveOptions(e) {
               folders: document.querySelector("#folders").value,
               host: document.querySelector("#host").value,
               user: document.querySelector("#user").value,
-              password: document.querySelector("#password").value
+              password: document.querySelector("#password").value,
+              client: document.querySelector("#client").value
           }
       })
   }
@@ -18,6 +19,8 @@ function restoreOptions() {
     document.querySelector("#host").value = result.settings.host;
     document.querySelector("#user").value = result.settings.user;
     document.querySelector("#password").value = result.settings.password;
+    if (result.settings.client)
+        document.querySelector("#client").value = result.settings.client;
   }
 
   function onError(error) {
@@ -48,5 +51,6 @@ document.getElementById("folders").addEventListener("blur", (e) => {createMenus(
 document.getElementById("host").addEventListener("blur", saveOptions);
 document.getElementById("user").addEventListener("blur", saveOptions);
 document.getElementById("password").addEventListener("blur", saveOptions);
+document.getElementById("client").addEventListener("blur", saveOptions);
 
 createMenus();

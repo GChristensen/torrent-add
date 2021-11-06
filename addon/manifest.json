@@ -1,8 +1,7 @@
 {
-
   "manifest_version": 2,
   "name": "Add torrent",
-  "version": "1.0.0.10",
+  "version": "1.1.1",
 
   "homepage_url": "https://gchristensen.github.io/torrent-add/",
 
@@ -28,9 +27,8 @@
   },
 
   "background": {
-    "scripts": ["background.js"]
+    "page": "background.html"
   },
 
   "permissions": ["<all_urls>", "tabs", "storage", "contextMenus", "notifications", "webRequest", "webRequestBlocking"]
-
 }

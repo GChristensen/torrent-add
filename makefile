@@ -1,9 +1,9 @@
 test:
-	start web-ext run -p "%APPDATA%/Mozilla/Firefox/Profiles/debug" --keep-profile-changes --browser-console
+	cd addon; start web-ext run -p "${HOME}/../firefox/debug" --keep-profile-changes --browser-console
 
 sign:
-	web-ext sign -i web-ext-artifacts marketing screen.png *.md *.iml updates.json `cat $(HOME)/.amo/creds`
+	cd addon; web-ext sign -i web-ext-artifacts `cat $(HOME)/.amo/creds`
 
 chrome:
-	rm -f AddTorrent.zip
-	7za a AddTorrent.zip res/* *.html *.js manifest.json
+	cd addon; rm -f AddTorrent.zip
+	cd addon; 7za a AddTorrent.zip res/* *.html *.js manifest.json
