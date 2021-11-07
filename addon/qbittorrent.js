@@ -32,7 +32,7 @@ async function login(settings) {
         const loginURL = makeAPIURL(settings, "auth", "login");
         const resp = await fetch(loginURL + `?username=${settings.user}&password=${settings.password}`);
 
-        if (!resp.ok)
+        if (!resp.ok || (await resp.text()) === "Fails.")
             throw new Error(`HTTP error: ${resp.status}`);
     }
     catch (e) {
@@ -73,14 +73,18 @@ async function addTorrent(settings, category, form) {
 }
 
 export class QBittorrentClient {
-    async addMagnet(settings, link, category) {
-        const form = new FormData();
-        form.append("urls", link);
-        return addTorrent(settings, category, form);
+    constructor(settings) {
+        this.settings = settings
     }
 
-    async addTorrent(settings, link, category) {
+    async addMagnet(link, category) {
+        const form = new FormData();
+        form.append("urls", link);
+        return addTorrent(this.settings, category, form);
+    }
+
+    async addTorrent(link, category) {
         const form = await downloadFileAsForm(link, "torrents");
-        return addTorrent(settings, category, form);
+        return addTorrent(this.settings, category, form);
     }
 }

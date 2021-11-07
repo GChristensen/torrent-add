@@ -14,9 +14,9 @@ function withSettings(callback) {
 function selectClient(settings) {
     switch (settings.client) {
         case "qbittorrent":
-            return new QBittorrentClient();
+            return new QBittorrentClient(settings);
         default:
-            return new UTorrentClient();
+            return new UTorrentClient(settings);
     }
 }
 
@@ -25,9 +25,9 @@ function addTorrent(link, category) {
         const client = selectClient(settings);
 
         if (link.startsWith("magnet:"))
-            return client.addMagnet(settings, link, category);
+            return client.addMagnet(link, category);
         else
-            return client.addTorrent(settings, link, category);
+            return client.addTorrent(link, category);
     });
 }
 

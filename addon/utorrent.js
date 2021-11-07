@@ -46,16 +46,20 @@ async function makeAPIURL(settings, action, category) {
 }
 
 export class UTorrentClient {
-    async addMagnet(settings, link, category) {
-        const apiURL = await makeAPIURL(settings, "add-url", category);
+    constructor(settings) {
+        this.settings = settings
+    }
+
+    async addMagnet(link, category) {
+        const apiURL = await makeAPIURL(this.settings, "add-url", category);
         return fetch(apiURL + "&s=" +  encodeURIComponent(link));
     }
 
-    async addTorrent(settings, link, category) {
+    async addTorrent(link, category) {
         const form = await downloadFileAsForm(link, "torrent_file");
 
         if (form) {
-            const apiURL = await makeAPIURL(settings, "add-file", category);
+            const apiURL = await makeAPIURL(this.settings, "add-file", category);
             return fetch(apiURL, {method: "POST", body: form});
         }
     }
