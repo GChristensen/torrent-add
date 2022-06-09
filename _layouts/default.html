@@ -44,7 +44,7 @@
     </header>
     <section>
 
-        <h1 id="add-torrent">Add Torrent</h1>
+        <h1 id="add-torrent">Add Torrent To</h1>
 
         <p><img height="16px" width="16px" src="/firefox.png" alt="Firefox" />
             <a id="xpi-link" href="#">Firefox Add-On</a>
@@ -86,54 +86,20 @@
         </script>
 
         <div id="placeholder" style="display: block;">
-            <div style="position: relative; display: table;" onclick="watch()">
+            <!--div style="position: relative; display: table;" onclick="watch()"-->
                 <!--img title="Watch on Youtube" style="cursor: pointer;" src="/enso-portable/screen.jpg" alt="screen" /-->
                 <img style="cursor: pointer;" src="/torrent-add/screen.png" alt="screen"/>
-                <div style="position: absolute; right: 10px; bottom: 10px; color: white; font-weight: bold; cursor: pointer;" onclick="watch()"
-                ><img src="/play_video.png" style="vertical-align: middle; cursor: pointer;"></div>
-            </div>
-        </div>
-
-        <div id="webm" style="display: none;">
-            <video src="/torrent-add/media/demo.webm" width="100%" type="video/webm" muted />
+            <!--/div-->
         </div>
 
         <br>
 
         <h4>Description</h4>
 
-        <p style="text-align: justify;">A minimalistic add-on for uTorrent users. Allows to instantly begin download of a torrent or a magnet link into a configurable set of
-            directories. Very handy, if you have uTorrent on a dedicated machine.</p>
+        <p style="text-align: justify;">A minimalistic add-on for uTorrent and qBittorrent users. Allows to instantly
+            begin download of a torrent or a magnet link into a configurable set of
+            directories.</p>
 
-        <p style="text-align: justify;">
-            <a href="https://www.qbittorrent.org/" target="_blank">qBittorrent</a> is supported since version 1.1.0.
-        </p>
-
-        <p>There is a couple of setting that should be configured in uTorrent:</p>
-        <ul>
-            <li>
-                <p><b>uTorrent: ‘Advanced’ | ‘Webu UI’ | ‘Enable Web UI’</b><br />
-                    <img src="/torrent-add/utorrent-settings.png" alt="utorrent settings" /></p>
-            </li>
-            <li>
-                <p><b>uTorrent: ‘Directories’ | ‘Put new downloads in’</b> (the files will be downloaded into the corresponding
-                    subdirectories of this folder):<br />
-                    <img src="/torrent-add/directory-settings.png" alt="directory settings" /></p>
-            </li>
-            <li>
-                <p>You also need to provide uTorrent API url, username and password in the addon settings:<br />
-                    <img src="/torrent-add/addon-settings.png" alt="addon settings" /></p>
-            </li>
-        </ul>
-
-        <p>qBittorrent does not require any particular configuration.</p>
-
-        <h4>Installing Firefox Add-On</h4>
-
-        <p>Since the add-on is self-hosted, it is necessary to allow the installation from GitHub.<br><br>
-            <img src="/images/firefox-allow.png"></p>
-
-        <p>The addon will update automatically.</p>
     </section>
     <footer>
     </footer>

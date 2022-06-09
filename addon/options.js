@@ -1,5 +1,7 @@
+import {DEFAULT_SETTINGS} from "./constants.js";
+
 function saveOptions(e) {
-  if (e) {
+    if (e) {
       e.preventDefault();
       chrome.storage.local.set({
           settings: {
@@ -10,24 +12,25 @@ function saveOptions(e) {
               client: document.querySelector("#client").value
           }
       })
-  }
+    }
 }
 
 function restoreOptions() {
-  function setCurrentChoice(result) {
-    document.querySelector("#folders").value = result.settings.folders;
-    document.querySelector("#host").value = result.settings.host;
-    document.querySelector("#user").value = result.settings.user;
-    document.querySelector("#password").value = result.settings.password;
-    if (result.settings.client)
-        document.querySelector("#client").value = result.settings.client;
-  }
+    function setCurrentChoice(result) {
+        document.querySelector("#folders").value = result.settings?.folders || DEFAULT_SETTINGS.folders;
+        document.querySelector("#host").value = result.settings?.host || "";
+        document.querySelector("#user").value = result.settings?.user || "";
+        document.querySelector("#password").value = result.settings?.password || "";
 
-  function onError(error) {
-    console.log(`Error: ${error}`);
-  }
+        if (result.settings?.client)
+            document.querySelector("#client").value = result.settings.client;
+    }
 
-  chrome.storage.local.get("settings", setCurrentChoice);
+    function onError(error) {
+        console.log(`Error: ${error}`);
+    }
+
+    chrome.storage.local.get("settings", setCurrentChoice);
 }
 
 function createMenus() {

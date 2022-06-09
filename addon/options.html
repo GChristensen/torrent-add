@@ -2,6 +2,15 @@
 <html>
   <head>
     <meta charset="utf-8"/>
+    <style>
+      #client-container {
+        display: flex;
+      }
+
+      .spacer {
+        flex: 1 0 auto;
+      }
+    </style>
   </head>
 
   <body>
@@ -27,10 +36,14 @@
       <tr>
         <td style="width: 20%"><label>Client</label></td>
         <td>
-          <select id="client">
-            <option value="utorrent" selected>uTorrent</option>
-            <option value="qbittorrent">qBittorrent</option>
-          </select>
+          <div id="client-container">
+            <select id="client">
+              <option value="utorrent" selected>uTorrent</option>
+              <option value="qbittorrent">qBittorrent</option>
+            </select>
+            <div class="spacer"></div>
+            <a href="help.html" target="_blank">Help</a>
+          </div>
         </td>
       </tr>
     </table>
@@ -38,6 +51,6 @@
         <button id="save" type="submit">Save</button>
       </div-->
     </form>
-    <script src="options.js"></script>
+    <script src="options.js" type="module"></script>
   </body>
 </html>

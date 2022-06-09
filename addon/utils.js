@@ -2,7 +2,7 @@
 export function showNotification(message) {
     chrome.notifications.create("cake-notification", {
         "type": "basic",
-        "iconUrl": chrome.extension.getURL("res/icon96.png"),
+        "iconUrl": chrome.runtime.getURL("res/icon.svg"),
         "title": "Add Torrent",
         "message": message
     });

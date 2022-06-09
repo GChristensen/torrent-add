@@ -32,12 +32,15 @@ async function login(settings) {
         const loginURL = makeAPIURL(settings, "auth", "login");
         const resp = await fetch(loginURL + `?username=${settings.user}&password=${settings.password}`);
 
-        if (!resp.ok || (await resp.text()) === "Fails.")
-            throw new Error(`HTTP error: ${resp.status}`);
+        if (!resp.ok || (await resp.text()) === "Fails.") {
+            const error = new Error(`HTTP error: ${resp.status}`);
+            error.addTorrentMessage = `Please check authentication credentials.`;
+            throw error;
+        }
     }
     catch (e) {
         console.log(e);
-        showNotification("Can not login qBittorrent.");
+        showNotification(e.addTorrentMessage || "Can not access qBittorrent.");
     }
 }
 
@@ -62,9 +65,9 @@ async function addTorrent(settings, category, form) {
         form.append("savepath", savePath);
 
         const apiURL = makeAPIURL(settings, "torrents", "add");
-        const resp = await fetch(apiURL, {method: "POST", body: form});
+        const response = await fetch(apiURL, {method: "POST", body: form});
 
-        if (!resp.ok)
+        if (!response.ok)
             showNotification("Error adding torrent.");
     }
     finally {
