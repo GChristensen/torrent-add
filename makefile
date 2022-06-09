@@ -7,6 +7,9 @@ test-nightly:
 sign:
 	cd addon; web-ext sign -i web-ext-artifacts `cat $(HOME)/.amo/creds`
 
+build:
+	cd addon; web-ext build -i web-ext-artifacts .web-extension-id
+
 chrome:
 	cd addon; rm -f AddTorrent.zip
 	cd addon; 7za a AddTorrent.zip res/* *.html *.js manifest.json

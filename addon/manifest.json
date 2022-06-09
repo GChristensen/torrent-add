@@ -9,7 +9,7 @@
 
   "applications": {
     "gecko": {
-      "id": "torrent-add@gchristensen.github.io",
+      "id": "torrent-add-we@gchristensen.github.io",
       "strict_min_version": "91.0"
     }
   },
