@@ -1,6 +1,6 @@
 import {DEFAULT_SETTINGS} from "./constants.js";
-import {UTorrentClient} from "./utorrent.js";
-import {QBittorrentClient} from "./qbittorrent.js";
+import {UTorrentClient} from "./clients/utorrent.js";
+import {QBittorrentClient} from "./clients/qbittorrent.js";
 
 function withSettings(callback) {
     chrome.storage.local.get("settings", ({settings}) => {

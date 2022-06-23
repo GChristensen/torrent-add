@@ -1,4 +1,4 @@
-import {downloadFileAsForm, showNotification} from "./utils.js";
+import {downloadFileAsForm, showNotification} from "../utils.js";
 
 function adjustHostURL(url) {
     let result = url;

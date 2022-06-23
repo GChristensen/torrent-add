@@ -15,13 +15,13 @@
   },
 
   "icons": {
-    "16": "res/icon.svg",
-    "48": "res/icon.svg",
-    "96": "res/icon.svg"
+    "16": "ui/icons/icon.svg",
+    "48": "ui/icons/icon.svg",
+    "96": "ui/icons/icon.svg"
   },
 
   "options_ui": {
-    "page": "options.html",
+    "page": "ui/options.html",
     "browser_style": true
   },
 

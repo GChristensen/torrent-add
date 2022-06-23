@@ -1,4 +1,4 @@
-import {DEFAULT_SETTINGS} from "./constants.js";
+import {DEFAULT_SETTINGS} from "../constants.js";
 
 function saveOptions(e) {
     if (e) {

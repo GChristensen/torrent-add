@@ -1,5 +1,5 @@
-import {ROOT_FOLDER} from "./constants.js";
-import {downloadFileAsForm, showNotification} from "./utils.js";
+import {ROOT_FOLDER} from "../constants.js";
+import {downloadFileAsForm, showNotification} from "../utils.js";
 
 function adjustHostURL(url) {
     let result = url;
