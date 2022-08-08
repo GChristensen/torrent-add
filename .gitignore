@@ -2,3 +2,5 @@
 *.iml
 /addon/web-ext-artifacts
 /addon/.web-extension-id
+/addon/_metadata
+*.zip

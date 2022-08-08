@@ -20,7 +20,8 @@ function addTorrent(link, category) {
         return client.addTorrent(link, category);
 }
 
-settings.load().then(() => {
+settings.load().then(async () => {
+    await browser.contextMenus.removeAll();
     settings.folders().split(":").forEach((folder) => {
         if (folder) {
             chrome.contextMenus.create({

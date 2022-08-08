@@ -1,3 +1,5 @@
+import {settings} from "./settings.js";
+
 export function merge(to, from) {
     for (const [k, v] of Object.entries(from)) {
         if (!to.hasOwnProperty(k))
@@ -7,9 +9,13 @@ export function merge(to, from) {
 }
 
 export function showNotification(message) {
+    const icon = settings.platform.firefox
+        ? chrome.runtime.getURL("ui/icons/logo.svg")
+        : chrome.runtime.getURL("ui/icons/logo128.png");
+
     chrome.notifications.create("cake-notification", {
         "type": "basic",
-        "iconUrl": chrome.runtime.getURL("ui/icons/icon.svg"),
+        "iconUrl": icon,
         "title": "Add Torrent",
         "message": message
     });
