@@ -1,6 +1,4 @@
 .idea
 *.iml
-web-ext-artifacts
-.web-extension-id
-*.bat
-AddTorrent.zip
+/addon/web-ext-artifacts
+/addon/.web-extension-id

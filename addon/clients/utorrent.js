@@ -1,3 +1,4 @@
+import {settings} from "../settings.js"
 import {ROOT_FOLDER} from "../constants.js";
 import {downloadFileAsForm, showNotification} from "../utils.js";
 
@@ -16,16 +17,16 @@ function adjustHostURL(url) {
     return result;
 }
 
-function makeuTorrentAuthHeaders(settings) {
+function makeuTorrentAuthHeaders() {
     const headers = new Headers();
-    headers.append('Authorization', 'Basic ' + btoa(settings.user + ':' + settings.password));
+    headers.append('Authorization', 'Basic ' + btoa(settings.user() + ':' + settings.password()));
     return headers;
 }
 
-async function getAPIToken(settings, host) {
+async function getAPIToken(host) {
     try {
         const tokenURL = host + "token.html";
-        const response = await fetch(tokenURL, {headers: makeuTorrentAuthHeaders(settings)});
+        const response = await fetch(tokenURL, {headers: makeuTorrentAuthHeaders()});
 
         if (response.ok) {
             const doc = await response.text();
@@ -33,7 +34,7 @@ async function getAPIToken(settings, host) {
         }
         else if (response.status === 401) {
             const error = new Error();
-            error.addTorrentMessage = `Please check authentication credentials.`;
+            error.addTorrentMessage = `Please check uTorrent authentication credentials.`;
             throw error;
         }
         else
@@ -41,27 +42,23 @@ async function getAPIToken(settings, host) {
     }
     catch (e) {
         console.error(e);
-        showNotification(e.addTorrentMessage || `Error authenticating torrent client.`);
+        showNotification(e.addTorrentMessage || `Error authenticating uTorrent.`);
         throw e;
     }
 }
 
-async function makeAPIURL(settings, action, category) {
-    const host = adjustHostURL(settings.host);
-    const token = await getAPIToken(settings, host);
+async function makeAPIURL(action, category) {
+    const host = adjustHostURL(settings.host());
+    const token = await getAPIToken(host);
     const path = category === ROOT_FOLDER? "": category;
     return `${host}?token=${token}&action=${action}&download_dir=0${path? "&path=" + path: ""}`;
 }
 
 export class UTorrentClient {
-    constructor(settings) {
-        this.settings = settings
-    }
-
     async addMagnet(link, category) {
-        const apiURL = await makeAPIURL(this.settings, "add-url", category);
+        const apiURL = await makeAPIURL("add-url", category);
         const response = await fetch(apiURL + "&s=" +  encodeURIComponent(link), {
-            headers: makeuTorrentAuthHeaders(this.settings)
+            headers: makeuTorrentAuthHeaders()
         });
 
         if (!response.ok)
@@ -72,11 +69,11 @@ export class UTorrentClient {
         const form = await downloadFileAsForm(link, "torrent_file");
 
         if (form) {
-            const apiURL = await makeAPIURL(this.settings, "add-file", category);
+            const apiURL = await makeAPIURL("add-file", category);
             const response = await fetch(apiURL, {
                 method: "POST",
                 body: form,
-                headers: makeuTorrentAuthHeaders(this.settings)
+                headers: makeuTorrentAuthHeaders()
             });
 
             if (!response.ok)

@@ -1,59 +1,53 @@
-import {DEFAULT_SETTINGS} from "../constants.js";
+import {settings} from "../settings.js";
 
-function saveOptions(e) {
+async function saveOptions(e) {
     if (e) {
-      e.preventDefault();
-      chrome.storage.local.set({
-          settings: {
-              folders: document.querySelector("#folders").value,
-              host: document.querySelector("#host").value,
-              user: document.querySelector("#user").value,
-              password: document.querySelector("#password").value,
-              client: document.querySelector("#client").value
-          }
-      })
+        e.preventDefault();
+
+        await settings.folders(document.querySelector("#folders").value);
+        await settings.host(document.querySelector("#host").value);
+        await settings.user(document.querySelector("#user").value);
+        await settings.password(document.querySelector("#password").value);
+        await settings.client(document.querySelector("#client").value);
     }
 }
 
-function restoreOptions() {
-    function setCurrentChoice(result) {
-        document.querySelector("#folders").value = result.settings?.folders || DEFAULT_SETTINGS.folders;
-        document.querySelector("#host").value = result.settings?.host || "";
-        document.querySelector("#user").value = result.settings?.user || "";
-        document.querySelector("#password").value = result.settings?.password || "";
+async function restoreOptions() {
+    await settings.load();
 
-        if (result.settings?.client)
-            document.querySelector("#client").value = result.settings.client;
-    }
+    document.querySelector("#folders").value = settings.folders();
+    document.querySelector("#host").value = settings.host();
+    document.querySelector("#user").value = settings.user();
+    document.querySelector("#password").value = settings.password();
 
-    function onError(error) {
-        console.log(`Error: ${error}`);
-    }
-
-    chrome.storage.local.get("settings", setCurrentChoice);
+    const client = settings.client();
+    if (client)
+        document.querySelector("#client").value = client;
 }
 
-function createMenus() {
-    chrome.storage.local.get("settings", ({settings}) => {
-        chrome.contextMenus.removeAll(() => {
-          document.querySelector("#folders").value.split(":").forEach((folder) => {
-              if (folder) {
-                  chrome.contextMenus.create({
-                      id: folder,
-                      title: folder,
-                      contexts: ["link"]
-                  });
-              }
-          });
-      });
+async function createMenus() {
+    await browser.contextMenus.removeAll();
+    const folders = document.querySelector("#folders").value.split(":");
+
+    folders.forEach(folder => {
+        if (folder) {
+            browser.contextMenus.create({
+              id: folder,
+              title: folder,
+              contexts: ["link"]
+            });
+        }
     });
 }
 
-document.addEventListener("DOMContentLoaded", restoreOptions);
-document.getElementById("folders").addEventListener("blur", (e) => {createMenus(); saveOptions(e);});
-document.getElementById("host").addEventListener("blur", saveOptions);
-document.getElementById("user").addEventListener("blur", saveOptions);
-document.getElementById("password").addEventListener("blur", saveOptions);
-document.getElementById("client").addEventListener("blur", saveOptions);
+document.addEventListener("DOMContentLoaded", async () => {
+    await restoreOptions();
 
-createMenus();
+    document.getElementById("folders").addEventListener("blur", (e) => {createMenus(); saveOptions(e);});
+    document.getElementById("host").addEventListener("blur", saveOptions);
+    document.getElementById("user").addEventListener("blur", saveOptions);
+    document.getElementById("password").addEventListener("blur", saveOptions);
+    document.getElementById("client").addEventListener("blur", saveOptions);
+    
+    await createMenus();
+});

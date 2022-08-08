@@ -1,3 +1,4 @@
+import {settings} from "../settings.js"
 import {downloadFileAsForm, showNotification} from "../utils.js";
 
 function adjustHostURL(url) {
@@ -15,26 +16,27 @@ function adjustHostURL(url) {
     return result;
 }
 
-function makeAPIURL(settings, api, method) {
-    return `${adjustHostURL(settings.host)}/api/v2/${api}/${method}`;
+function makeAPIURL(api, method) {
+    return `${adjustHostURL(settings.host())}/api/v2/${api}/${method}`;
 }
 
-function fetchAPI(settings, api, method) {
-    return fetch(makeAPIURL(settings, api, method))
+function fetchAPI(api, method) {
+    const apiURL = makeAPIURL(api, method);
+    return fetch(apiURL);
 }
 
-function fetchJSON(settings, api, method) {
-    return fetchAPI(settings, api, method).then(r => r.json());
+function fetchJSON(api, method) {
+    return fetchAPI(api, method).then(r => r.json());
 }
 
-async function login(settings) {
+async function login() {
     try {
-        const loginURL = makeAPIURL(settings, "auth", "login");
-        const resp = await fetch(loginURL + `?username=${settings.user}&password=${settings.password}`);
+        const loginURL = makeAPIURL("auth", "login");
+        const resp = await fetch(loginURL + `?username=${settings.user()}&password=${settings.password()}`);
 
         if (!resp.ok || (await resp.text()) === "Fails.") {
             const error = new Error(`HTTP error: ${resp.status}`);
-            error.addTorrentMessage = `Please check authentication credentials.`;
+            error.addTorrentMessage = `Please check qBittorrent authentication credentials.`;
             throw error;
         }
     }
@@ -44,12 +46,12 @@ async function login(settings) {
     }
 }
 
-function logout(settings) {
-    return fetchAPI(settings, "auth", "logout");
+function logout() {
+    return fetchAPI("auth", "logout");
 }
 
-async function createSavePath(settings, category) {
-    const prefs = await fetchJSON(settings, "app", "preferences");
+async function createSavePath(category) {
+    const prefs = await fetchJSON("app", "preferences");
     let path = prefs.save_path;
 
     if (!path.endsWith("/") && !path.endsWith("\\"))
@@ -58,36 +60,32 @@ async function createSavePath(settings, category) {
     return path + category;
 }
 
-async function addTorrent(settings, category, form) {
+async function addTorrent(category, form) {
     try {
-        await login(settings);
-        const savePath = await createSavePath(settings, category);
+        await login();
+        const savePath = await createSavePath(category);
         form.append("savepath", savePath);
 
-        const apiURL = makeAPIURL(settings, "torrents", "add");
+        const apiURL = makeAPIURL("torrents", "add");
         const response = await fetch(apiURL, {method: "POST", body: form});
 
         if (!response.ok)
             showNotification("Error adding torrent.");
     }
     finally {
-        await logout(settings);
+        await logout();
     }
 }
 
 export class QBittorrentClient {
-    constructor(settings) {
-        this.settings = settings
-    }
-
     async addMagnet(link, category) {
         const form = new FormData();
         form.append("urls", link);
-        return addTorrent(this.settings, category, form);
+        return addTorrent(category, form);
     }
 
     async addTorrent(link, category) {
         const form = await downloadFileAsForm(link, "torrents");
-        return addTorrent(this.settings, category, form);
+        return addTorrent(category, form);
     }
 }

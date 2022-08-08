@@ -1,38 +1,27 @@
-import {DEFAULT_SETTINGS} from "./constants.js";
 import {UTorrentClient} from "./clients/utorrent.js";
 import {QBittorrentClient} from "./clients/qbittorrent.js";
+import {settings} from "./settings.js";
 
-function withSettings(callback) {
-    chrome.storage.local.get("settings", ({settings}) => {
-        if (!settings)
-            settings = DEFAULT_SETTINGS;
-
-        callback(settings);
-    });
-}
-
-function selectClient(settings) {
-    switch (settings.client) {
+function createClient() {
+    switch (settings.client()) {
         case "qbittorrent":
-            return new QBittorrentClient(settings);
+            return new QBittorrentClient();
         default:
-            return new UTorrentClient(settings);
+            return new UTorrentClient();
     }
 }
 
 function addTorrent(link, category) {
-    withSettings(settings => {
-        const client = selectClient(settings);
+    const client = createClient();
 
-        if (link.startsWith("magnet:"))
-            return client.addMagnet(link, category);
-        else
-            return client.addTorrent(link, category);
-    });
+    if (link.startsWith("magnet:"))
+        return client.addMagnet(link, category);
+    else
+        return client.addTorrent(link, category);
 }
 
-withSettings(settings => {
-    settings.folders.split(":").forEach((folder) => {
+settings.load().then(() => {
+    settings.folders().split(":").forEach((folder) => {
         if (folder) {
             chrome.contextMenus.create({
                 id: folder,
@@ -43,12 +32,12 @@ withSettings(settings => {
     });
 });
 
-chrome.contextMenus.onClicked.addListener(function(info, tab) {
+browser.contextMenus.onClicked.addListener(function(info, tab) {
     if (info.linkUrl)
         addTorrent(info.linkUrl, info.menuItemId);
 });
 
-chrome.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
+browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
     switch (message.type) {
         case "ADD_TORRENT":
             if (message.url)
@@ -57,32 +46,35 @@ chrome.runtime.onMessageExternal.addListener((message, sender, sendResponse) => 
     }
 });
 
-chrome.webRequest.onBeforeSendHeaders.addListener(
-    (requestDetails) => {
-        for (var header of requestDetails.requestHeaders) {
-            if (header.name.toLowerCase() === "cookie") {
-                if (header.value && header.value.indexOf("bb_dl=") === -1)
-                    header.value = header.value + "; bb_dl=" + requestDetails.url.split("=")[1];
+if (browser.webRequest) {
+    browser.webRequest.onBeforeSendHeaders.addListener(
+        (requestDetails) => {
+            for (var header of requestDetails.requestHeaders) {
+                if (header.name.toLowerCase() === "cookie") {
+                    if (header.value && header.value.indexOf("bb_dl=") === -1)
+                        header.value = header.value + "; bb_dl=" + requestDetails.url.split("=")[1];
+                }
             }
-        }
-        return {requestHeaders: requestDetails.requestHeaders};
-    },
-    {urls: ["*://*/forum/dl.php?t=*"]},
-    ["blocking", "requestHeaders"]
-);
+            return {requestHeaders: requestDetails.requestHeaders};
+        },
+        {urls: ["*://*/forum/dl.php?t=*"]},
+        ["blocking", "requestHeaders"]
+    );
 
-function originWithId(header) {
-    return header.name.toLowerCase() === 'origin' &&
-        (header.value.indexOf('moz-extension://') === 0 ||
-            header.value.indexOf('chrome-extension://') === 0);
+
+    function originWithId(header) {
+        return header.name.toLowerCase() === 'origin' &&
+            (header.value.indexOf('moz-extension://') === 0 ||
+                header.value.indexOf('chrome-extension://') === 0);
+    }
+
+    browser.webRequest.onBeforeSendHeaders.addListener(
+        (details) => {
+            return {
+                requestHeaders: details.requestHeaders.filter(x => !originWithId(x))
+            }
+        },
+        {urls: ["<all_urls>"]},
+        ["blocking", "requestHeaders"]
+    );
 }
-
-chrome.webRequest.onBeforeSendHeaders.addListener(
-    (details) => {
-        return {
-            requestHeaders: details.requestHeaders.filter(x => !originWithId(x))
-        }
-    },
-    {urls: ["<all_urls>"]},
-    ["blocking", "requestHeaders"]
-);
