@@ -24,7 +24,7 @@
      "browser_style": true
    },
 
-   "permissions": ["tabs", "storage", "contextMenus", "notifications", "declarativeNetRequest"],
+   "permissions": ["storage", "contextMenus", "notifications", "declarativeNetRequest"],
    "host_permissions": ["<all_urls>"],
 
    "declarative_net_request": {

@@ -16,7 +16,7 @@ build:
 build-chrome:
 	make chrome-mv3
 	rm -f AddTorrentTo.zip
-	7za a AddTorrentTo.zip ./addon/* -xr!web-ext-artifacts -xr!*.mv2* -xr!*.mv3* -xr!version.txt
+	7za a AddTorrentTo.zip ./addon/* -xr!web-ext-artifacts -xr!.web-extension-id -xr!_metadata -xr!*.mv2* -xr!*.mv3* -xr!version.txt
 
 .PHONY: firefox-mv2
 firefox-mv2:

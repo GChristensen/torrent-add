@@ -1,5 +1,5 @@
 {
-  "manifest_version": 3,
+  "manifest_version": 2,
   "name": "Add Torrent To",
   "version": "$VERSION$",
 
@@ -23,9 +23,7 @@
     "browser_style": true
   },
 
-  "permissions": ["tabs", "storage", "contextMenus", "notifications", "webRequest", "webRequestBlocking"],
-
-  "host_permissions": ["<all_urls>"],
+  "permissions": ["<all_urls>", "tabs", "storage", "contextMenus", "notifications", "webRequest", "webRequestBlocking"],
 
   "icons": {
     "128": "ui/icons/logo.svg"
