@@ -7,5 +7,5 @@
             { "header": "origin", "operation": "remove" }
         ]
     },
-    "condition": { "urlFilter": "api/v2/torrents/add", "resourceTypes": ["xmlhttprequest"] }
+    "condition": { "regexFilter": "^http://[^/]+:\\d+/api/v2/torrents/add$", "resourceTypes": ["xmlhttprequest"] }
 }]
