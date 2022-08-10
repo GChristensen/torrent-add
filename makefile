@@ -6,17 +6,17 @@ test-nightly:
 
 sign:
 	make firefox-mv2
-	cd addon; web-ext sign -i web-ext-artifacts .web-extension-id *.mv2* *.mv3* background_worker.js version.txt `cat $(HOME)/.amo/creds`
+	cd addon; web-ext sign -a ../build -i web-ext-artifacts .web-extension-id *.mv2* *.mv3* background_worker.js version.txt `cat $(HOME)/.amo/creds`
 
 build:
 	cd addon; python ../scripts/mkmanifest.py manifest.json.mv2 manifest.json `cat version.txt` --public
-	cd addon; web-ext build -i web-ext-artifacts .web-extension-id *.mv2* *.mv3* background_worker.js version.txt
+	cd addon; web-ext build -a ../build -i web-ext-artifacts .web-extension-id *.mv2* *.mv3* background_worker.js version.txt
 	make firefox-mv2
 
 build-chrome:
 	make chrome-mv3
-	rm -f AddTorrentTo.zip
-	7za a AddTorrentTo.zip ./addon/* -xr!web-ext-artifacts -xr!.web-extension-id -xr!_metadata -xr!*.mv2* -xr!*.mv3* -xr!version.txt
+	rm -f build/AddTorrentTo.zip
+	7za a build/AddTorrentTo.zip ./addon/* -xr!web-ext-artifacts -xr!.web-extension-id -xr!_metadata -xr!*.mv2* -xr!*.mv3* -xr!version.txt
 
 .PHONY: firefox-mv2
 firefox-mv2:

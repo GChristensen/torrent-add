@@ -1,5 +1,6 @@
 .idea
 *.iml
+/build
 /addon/web-ext-artifacts
 /addon/.web-extension-id
 /addon/_metadata
