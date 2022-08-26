@@ -1,37 +1,31 @@
 {
-  "manifest_version": 3,
+  "manifest_version": 2,
   "name": "Add Torrent To",
-  "version": "0.2.1",
+  "version": "0.2.2",
 
-   "homepage_url": "https://gchristensen.github.io/torrent-add/",
+  "homepage_url": "https://gchristensen.github.io/torrent-add/",
 
-   "description": "Instantly add torrents to a customizable set of directories in uTorrent or qBittorrent.",
+  "description": "Instantly add torrents to a customizable set of directories in uTorrent or qBittorrent.",
 
-   "icons": {
-     "16": "ui/icons/logo16.png",
-     "48": "ui/icons/logo48.png",
-     "96": "ui/icons/logo96.png",
-     "128": "ui/icons/logo128.png"
-   },
+  "applications": {
+    "gecko": {
+      "id": "torrent-add@gchristensen.github.io",
+      "strict_min_version": "91.0"
+    }
+  },
 
-   "background": {
-     "service_worker": "background_worker.js",
-     "type": "module"
-   },
+  "background": {
+    "page": "background.html"
+  },
 
-   "options_ui": {
-     "page": "ui/options.html",
-     "browser_style": true
-   },
+  "options_ui": {
+    "page": "ui/options.html",
+    "browser_style": true
+  },
 
-   "permissions": ["storage", "contextMenus", "notifications", "declarativeNetRequest"],
-   "host_permissions": ["<all_urls>"],
+  "permissions": ["<all_urls>", "tabs", "storage", "contextMenus", "notifications", "webRequest", "webRequestBlocking"],
 
-   "declarative_net_request": {
-     "rule_resources": [{
-       "id": "ruleset_1",
-       "enabled": true,
-       "path": "net_rules.json"
-     }]
-   }
+  "icons": {
+    "128": "ui/icons/logo.svg"
+  }
 }

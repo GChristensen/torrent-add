@@ -32,7 +32,14 @@ function fetchJSON(api, method) {
 async function login() {
     try {
         const loginURL = makeAPIURL("auth", "login");
-        const resp = await fetch(loginURL + `?username=${settings.user()}&password=${settings.password()}`);
+        const resp = await fetch(loginURL, {
+            method: "post",
+            headers: {"content-type": "application/x-www-form-urlencoded"},
+            body: new URLSearchParams({
+                    "username": settings.user(),
+                    "password": settings.password()
+                })
+        });
 
         if (!resp.ok || (await resp.text()) === "Fails.") {
             const error = new Error(`HTTP error: ${resp.status}`);

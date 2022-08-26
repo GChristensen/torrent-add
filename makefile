@@ -1,18 +1,21 @@
 test:
-	cd addon; start web-ext run -p "${HOME}/../firefox/debug" --keep-profile-changes --browser-console
+	cd addon; start web-ext run -p "${HOME}/../firefox/debug" --keep-profile-changes
 
 test-nightly:
 	cd addon; start web-ext run -p "$(HOME)/../firefox/debug.nightly" --firefox=nightly --keep-profile-changes
 
+.PHONY: sign
 sign:
 	make firefox-mv2
 	cd addon; web-ext sign -a ../build -i web-ext-artifacts .web-extension-id *.mv2* *.mv3* background_worker.js version.txt `cat $(HOME)/.amo/creds`
 
+.PHONY: build
 build:
 	cd addon; python ../scripts/mkmanifest.py manifest.json.mv2 manifest.json `cat version.txt` --public
 	cd addon; web-ext build -a ../build -i web-ext-artifacts .web-extension-id *.mv2* *.mv3* background_worker.js version.txt
 	make firefox-mv2
 
+.PHONY: build-chrome
 build-chrome:
 	make chrome-mv3
 	rm -f build/AddTorrentTo.zip
