@@ -25,6 +25,11 @@ function fetchAPI(api, method) {
     return fetch(apiURL);
 }
 
+function postAPI(api, method) {
+    const apiURL = makeAPIURL(api, method);
+    return fetch(apiURL, {method: "post"});
+}
+
 function fetchJSON(api, method) {
     return fetchAPI(api, method).then(r => r.json());
 }
@@ -54,7 +59,7 @@ async function login() {
 }
 
 function logout() {
-    return fetchAPI("auth", "logout");
+    return postAPI("auth", "logout");
 }
 
 async function createSavePath(category) {
@@ -69,6 +74,7 @@ async function createSavePath(category) {
 
 async function addTorrent(category, form) {
     try {
+        await settings.load();
         await login();
         const savePath = await createSavePath(category);
         form.append("savepath", savePath);
