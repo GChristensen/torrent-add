@@ -74,7 +74,6 @@ async function createSavePath(category) {
 
 async function addTorrent(category, form) {
     try {
-        await settings.load();
         await login();
         const savePath = await createSavePath(category);
         form.append("savepath", savePath);

@@ -11,7 +11,9 @@ function createClient() {
     }
 }
 
-function addTorrent(link, category) {
+async function addTorrent(link, category) {
+    await settings.load();
+
     const client = createClient();
 
     if (link.startsWith("magnet:"))
@@ -22,6 +24,7 @@ function addTorrent(link, category) {
 
 settings.load().then(async () => {
     await browser.contextMenus.removeAll();
+
     settings.folders().split(":").forEach((folder) => {
         if (folder) {
             chrome.contextMenus.create({
@@ -35,15 +38,14 @@ settings.load().then(async () => {
 
 browser.contextMenus.onClicked.addListener(function(info, tab) {
     if (info.linkUrl)
-        addTorrent(info.linkUrl, info.menuItemId);
+        return addTorrent(info.linkUrl, info.menuItemId);
 });
 
 browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
     switch (message.type) {
         case "ADD_TORRENT":
             if (message.url)
-                addTorrent(message.url, message.folder);
-            break;
+                return addTorrent(message.url, message.folder || "");
     }
 });
 
