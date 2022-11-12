@@ -4,6 +4,14 @@ test:
 test-nightly:
 	cd addon; start web-ext run -p "$(HOME)/../firefox/debug.nightly" --firefox=nightly --keep-profile-changes
 
+.PHONY: set-version
+set-version:
+	echo $(filter-out $@,$(MAKECMDGOALS)) > ./addon/version.txt
+
+.PHONY: get-version
+get-version:
+	@cat ./addon/version.txt
+
 .PHONY: sign
 sign:
 	make firefox-mv2
@@ -19,7 +27,7 @@ build:
 build-chrome:
 	make chrome-mv3
 	rm -f build/AddTorrentTo.zip
-	7za a build/AddTorrentTo.zip ./addon/* -xr!web-ext-artifacts -xr!.web-extension-id -xr!_metadata -xr!*.mv2* -xr!*.mv3* -xr!version.txt
+	7za a build/AddTorrentTo-`cat ./addon/version.txt`.zip ./addon/* -xr!web-ext-artifacts -xr!.web-extension-id -xr!_metadata -xr!*.mv2* -xr!*.mv3* -xr!version.txt
 
 .PHONY: firefox-mv2
 firefox-mv2:
@@ -32,3 +40,6 @@ firefox-mv3:
 .PHONY: chrome-mv3
 chrome-mv3:
 	cd addon; python ../scripts/mkmanifest.py manifest.json.mv3.chrome manifest.json `cat version.txt`
+
+%:
+	@:
