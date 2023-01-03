@@ -1,5 +1,6 @@
 import {settings} from "../settings.js"
 import {downloadFileAsForm, showNotification} from "../utils.js";
+import {ROOT_FOLDER} from "../constants.js";
 
 function adjustHostURL(url) {
     let result = url;
@@ -67,9 +68,11 @@ async function createSavePath(category) {
     let path = prefs.save_path;
 
     if (!path.endsWith("/") && !path.endsWith("\\"))
-        path += "/"
+        path += "/";
 
-    return path + category;
+    path = path + (category === ROOT_FOLDER? "": (category + "/"));
+
+    return path;
 }
 
 async function addTorrent(category, form) {
