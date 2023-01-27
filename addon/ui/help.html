@@ -2,33 +2,147 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Add Torrent To User Manual</title>
+
     <style>
         * {
-            font-family: Helvetica, Arial, sans-serif;
+            font-family: "Segoe UI", Arial, sans-serif;
+            font-size: 11pt;
+        }
+
+        body {
+            display: flex;
+        }
+
+        .placeholder {
+            flex-grow: 1;
+        }
+
+        .content {
+            max-width: 780px;
+            margin: 0 10px;
+        }
+
+        .content p {
+            text-align: justify;
+        }
+
+        .heading {
+            text-align: center;
+        }
+
+        p.figure {
+            text-align: center;
+        }
+
+        .mono {
+            font-family: "Lucida Console", monospace;
         }
     </style>
 </head>
 <body>
-<h2>uTorrent Configuration</h2>
-<ul>
-    <li>
-        <p><b>uTorrent: ‘Advanced’ | ‘Webu UI’ | ‘Enable Web UI’</b> (port configuration is optional)<br />
-            <img src="images/help/utorrent-settings.png" alt="utorrent settings" /></p>
-    </li>
-    <li>
-        <p><b>uTorrent: ‘Directories’ | ‘Put new downloads in’</b> (the files will be downloaded into the corresponding
-            subdirectories of this folder):<br />
-            <img src="images/help/directory-settings.png" alt="directory settings" /></p>
-    </li>
-    <li>
-        <p>You also need to provide uTorrent API url, username and password in the addon settings:<br />
-            <img src="images/help/addon-settings.png" alt="addon settings" /></p>
-    </li>
-</ul>
+<div class="placeholder"></div>
 
-<h2>qBittorrent Configuration</h2>
-<p>Only WebUI username/password configuration is required.</p>
+<div class="content">
+    <h2 class="heading">Add Torrent To User Manual</h2>
 
+    <p><b>Add Torrent To</b> allows to instantly begin a download of the torrent content into a
+       configurable set of directories or categories available from the browser context menu.
+       It is useful for preventing clutter in the download directory.
+    </p>
+
+    <p>To begin a download, right-click the link to a torrent file or a magnet link and select the
+        desired category from the "Add Torrent To" submenu. The download of the torrent content
+        will start immediately in the selected directory or category.
+    </p>
+
+    <p><b>Add Torrent To</b> supports both the downloads in plain subdirectories of the main
+        torrent download folder and the downloads with the torrent categories provided by the torrent
+        client. In the recent case, it is possible to specify a custom download directory for each
+        category in the torrent client settings. Such directories may be completely unrelated
+        to the main torrent download folder.
+        Please see the section below for the details on configuring your torrent client.</p>
+
+    <h3>Configuring qBittorrent</h3>
+
+    <p>Enable WebUI in qBittorrent settings and specify username and password. It is possible
+        to bypass authentication for the local addresses, or addresses from the local network.
+        You need to specify an IPv6 subnet mask (for example, fe80::/64) if IPv6 is enabled in
+        your router.
+    </p>
+    <p class="figure">
+        <img src="images/help/qbt-webui-settings.png">
+    </p>
+
+    <p>If you are using download categories provided by the torrent client, enable one of the
+        two following settings:
+        <ol>
+            <li>Set the <i>Default Torrent Management Mode</i> to <i>Automatic</i>.</li>
+            <li>Check the <i>Use Category paths in Manual Mode</i> option.</li>
+        </ol>
+    </p>
+
+    <p class="figure">
+        <img src="images/help/qbt-torrent-management-modes.png">
+    </p>
+
+    <p>Use the category context menu in the qBittorrent sidebar to add new categories.</p>
+    <p class="figure">
+        <img src="images/help/qbt-categories.png">
+    </p>
+
+    <p>The <b>Add Torrent To</b> may be not able to load categories from the torrent client if the
+    client was started after the browser was loaded. In this case, use the [refresh] context menu item
+    to obtain the download categories. In the WebExtensions Manifest v3 version of the add-on
+    the context menu comprised of client categories may not refresh automatically
+    even if the torrent client is running. To refresh the menu, open the add-on
+    settings and click the <b>Refresh</b> link.</p>
+
+    <p>It is not necessary to change these settings if you are using plain user download
+    category names provided in the extension settings.</p>
+
+    <h3>Configuring uTorrent</h3>
+    <p>Enable WebUI in uTorrent settings and specify username and password.
+    </p>
+
+    <p class="figure">
+        <img src="images/help/ut-webui-settings.png">
+    </p>
+
+    <p>Specify the default download directory.
+    </p>
+
+    <p class="figure">
+        <img src="images/help/ut-download-directory.png">
+    </p>
+
+    <p>uTorrent does not support retrieval of torrent download categories (in uTorrent they are
+        called labels) through the Web API.
+    </p>
+
+    <h3>Configuring the Extension</h3>
+
+    <p>Specify the torrent client name, WebUI URL, and authentication credentials you configured in
+        the torrent client at the previous steps.</p>
+
+    <p class="figure">
+        <img src="images/help/addon-authentication.png">
+    </p>
+
+    <p>Specify the torrent download category source, and the categories separated by the colon
+        character if you are using the user-provided categories.</p>
+
+    <p class="figure">
+        <img src="images/help/addon-categories.png">
+    </p>
+
+    <p>In the extension settings, it is not possible to edit or reorder download categories obtained
+        from the torrent client.</p>
+</div>
+
+<div class="placeholder"></div>
 </body>
 </html>
+
+
+

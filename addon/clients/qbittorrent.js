@@ -1,106 +1,167 @@
 import {settings} from "../settings.js"
-import {downloadFileAsForm, showNotification} from "../utils.js";
+import {fetchWithTimeout, showNotification} from "../utils.js";
 import {ROOT_FOLDER} from "../constants.js";
+import {TorrentClient} from "./client_base.js";
+import {downloadToUserCategories} from "./clients.js";
 
-function adjustHostURL(url) {
-    let result = url;
+export class QBittorrentClient extends TorrentClient {
+    #adjustHostURL(url) {
+        let result = url;
 
-    if (/.*\/gui\/?$/.exec(result))
-        result = result.replace(/\/gui\/?$/, "");
+        if (/.*\/gui\/?$/.exec(result))
+            result = result.replace(/\/gui\/?$/, "");
 
-    if (url.endsWith("/"))
-        result = result.replace(/\/$/, "");
+        if (url.endsWith("/"))
+            result = result.replace(/\/$/, "");
 
-    if (!/^https?:\/\//.exec(result))
-        result = "http://" + result;
+        if (!/^https?:\/\//.exec(result))
+            result = "http://" + result;
 
-    return result;
-}
+        return result;
+    }
 
-function makeAPIURL(api, method) {
-    return `${adjustHostURL(settings.host())}/api/v2/${api}/${method}`;
-}
+    #makeAPIURL(api, method) {
+        return `${this.#adjustHostURL(settings.host())}/api/v2/${api}/${method}`;
+    }
 
-function fetchAPI(api, method) {
-    const apiURL = makeAPIURL(api, method);
-    return fetch(apiURL);
-}
+    #fetchAPI(api, method) {
+        const apiURL = this.#makeAPIURL(api, method);
+        return fetch(apiURL);
+    }
 
-function postAPI(api, method) {
-    const apiURL = makeAPIURL(api, method);
-    return fetch(apiURL, {method: "post"});
-}
+    #postAPI(api, method) {
+        const apiURL = this.#makeAPIURL(api, method);
+        return fetch(apiURL, {method: "post"});
+    }
 
-function fetchJSON(api, method) {
-    return fetchAPI(api, method).then(r => r.json());
-}
+    #fetchJSON(api, method) {
+        return this.#fetchAPI(api, method).then(r => r.json());
+    }
 
-async function login() {
-    try {
-        const loginURL = makeAPIURL("auth", "login");
-        const resp = await fetch(loginURL, {
-            method: "post",
-            headers: {"content-type": "application/x-www-form-urlencoded"},
-            body: new URLSearchParams({
+    async #login(verbose = true, timeout = 10000) {
+        let result = false;
+
+        try {
+            const loginURL = this.#makeAPIURL("auth", "login");
+            const resp = await fetchWithTimeout(loginURL, {
+                timeout,
+                method: "post",
+                headers: {"content-type": "application/x-www-form-urlencoded"},
+                body: new URLSearchParams({
                     "username": settings.user(),
                     "password": settings.password()
                 })
-        });
+            });
 
-        if (!resp.ok || (await resp.text()) === "Fails.") {
-            const error = new Error(`HTTP error: ${resp.status}`);
-            error.addTorrentMessage = `Please check qBittorrent authentication credentials.`;
-            throw error;
+            if (!resp.ok || (await resp.text()) === "Fails.") {
+                const error = new Error(`HTTP error: ${resp.status}`);
+                error.addTorrentMessage = `Please check qBittorrent authentication credentials.`;
+                throw error;
+            }
+            else
+                result = true;
+        }
+        catch (e) {
+            console.log(e);
+
+            if (verbose)
+                showNotification(e.addTorrentMessage || "Can not access qBittorrent.");
+        }
+
+        return result;
+    }
+
+    #logout() {
+        try {
+            return this.#postAPI("auth", "logout");
+        }
+        catch (e) {
+            console.error(e);
         }
     }
-    catch (e) {
-        console.log(e);
-        showNotification(e.addTorrentMessage || "Can not access qBittorrent.");
+
+    async #createSavePath(prefs, category) {
+        let path = prefs.save_path;
+
+        if (!path.endsWith("/") && !path.endsWith("\\"))
+            path += "/";
+
+        path = path + (category === ROOT_FOLDER? "": (category + "/"));
+
+        return path;
     }
-}
 
-function logout() {
-    return postAPI("auth", "logout");
-}
+    async #addTorrent(category, form) {
+        try {
+            await this.#login();
 
-async function createSavePath(category) {
-    const prefs = await fetchJSON("app", "preferences");
-    let path = prefs.save_path;
+            const prefs = await this.#fetchJSON("app", "preferences");
 
-    if (!path.endsWith("/") && !path.endsWith("\\"))
-        path += "/";
+            if (downloadToUserCategories() /*|| !prefs.auto_tmm_enabled*/) {
+                const savePath = await this.#createSavePath(prefs, category);
+                form.append("savepath", savePath);
+            }
+            else
+                form.append("category", category);
 
-    path = path + (category === ROOT_FOLDER? "": (category + "/"));
+            const apiURL = this.#makeAPIURL("torrents", "add");
+            const response = await fetch(apiURL, {method: "POST", body: form});
 
-    return path;
-}
-
-async function addTorrent(category, form) {
-    try {
-        await login();
-        const savePath = await createSavePath(category);
-        form.append("savepath", savePath);
-
-        const apiURL = makeAPIURL("torrents", "add");
-        const response = await fetch(apiURL, {method: "POST", body: form});
-
-        if (!response.ok)
-            showNotification("Error adding torrent.");
+            if (!response.ok)
+                showNotification("Error adding torrent.");
+        }
+        finally {
+            await this.#logout();
+        }
     }
-    finally {
-        await logout();
-    }
-}
 
-export class QBittorrentClient {
+    async _queryClientCategories(verbose) {
+        let result = [];
+
+        try {
+            if (await this.#login(verbose)) {
+                const apiURL = this.#makeAPIURL("torrents", "categories");
+                const response = await fetch(apiURL);
+
+                if (response.ok) {
+                    const categories = await response.json();
+                    result = Object.keys(categories);
+                }
+                else
+                    showNotification("Error obtaining torrent categories from qBittorrent.");
+            }
+        }
+        finally {
+            await this.#logout();
+        }
+
+        return result;
+    }
+
+    async testConnection() {
+        let result = false;
+
+        try {
+            if (await this.#login(true, 1000)) {
+                showNotification("Successfully connected to qBittorrent.");
+                result = true;
+            }
+        }
+        finally {
+            await this.#logout();
+        }
+
+        return result;
+    }
+
     async addMagnet(link, category) {
         const form = new FormData();
         form.append("urls", link);
-        return addTorrent(category, form);
+        return this.#addTorrent(category, form);
     }
 
     async addTorrent(link, category) {
-        const form = await downloadFileAsForm(link, "torrents");
-        return addTorrent(category, form);
+        const form = await this._downloadFileAsForm(link, "torrents");
+        return this.#addTorrent(category, form);
     }
 }

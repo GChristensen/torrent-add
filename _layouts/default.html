@@ -10,6 +10,9 @@
     <!--[if lt IE 9]>
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
     <![endif]-->
+
+    <link rel="stylesheet" href="/css/gh-pages.css"/>
+    <script src="/js/gh-pages.js" type="text/javascript"></script>
 </head>
 <body>
 <div class="wrapper">
@@ -43,64 +46,7 @@
         {% endif %}
     </header>
     <section>
-
-        <h1 id="add-torrent">Add Torrent To</h1>
-
-        <p><img height="16px" width="16px" src="/images/firefox.png" alt="Firefox" />
-            <a id="xpi-link" href="https://addons.mozilla.org/en-US/firefox/addon/add-torrent-to/">Firefox Add-On</a>
-            :: <img height="16px" width="16px" src="/images/chrome.png" alt="Chrome" />
-            <a href="https://chrome.google.com/webstore/detail/add-torrent-to/jlbkggamnpibjmibgcohffcncainphbj" target="_blank">Chrome Extension</a>
-        </p>
-
-        <script>
-            // var xhr = new XMLHttpRequest();
-            // xhr.onreadystatechange = function() {
-            //     if (this.readyState == 4 && this.status == 200) {
-            //         var release = JSON.parse(this.responseText);
-            //         var link = document.getElementById("xpi-link");
-            //         link.href = release.assets[0].browser_download_url;
-            //     }
-            // };
-            // xhr.open('GET', 'https://api.github.com/repos/gchristensen/torrent-add/releases/latest');
-            // xhr.send();
-            //
-            // function watch() {
-            //     document.getElementById('placeholder').style.display='none';
-            //     document.getElementById('webm').style.display='block';
-            //     var video = document.querySelector('#webm video');
-            //     video.play();
-            //     setTimeout(function () {
-            //         document.getElementById('webm').style.display = 'none';
-            //         document.getElementById('placeholder').style.display = 'block';
-            //     }, 5000);
-            // }
-            //
-            // setTimeout(function() {
-            //     if (navigator.userAgent.search("Chrome") >= 0
-            //         || navigator.userAgent.search("Firefox") >= 0) {
-            //
-            //         watch();
-            //     }
-            // }, 1000);
-
-        </script>
-
-        <div id="placeholder" style="display: block;">
-            <!--div style="position: relative; display: table;" onclick="watch()"-->
-                <!--img title="Watch on Youtube" style="cursor: pointer;" src="/enso-portable/screen.jpg" alt="screen" /-->
-                <img style="cursor: pointer;" src="/torrent-add/screen.png" alt="screen"/>
-            <!--/div-->
-        </div>
-
-        <br>
-
-        <h4>Description</h4>
-
-        <p style="text-align: justify;">A minimalistic add-on for uTorrent and qBittorrent users. Allows to instantly
-            begin download of a torrent or a magnet link into a configurable set of
-            directories. Please see <a href="/torrent-add/addon/ui/help.html" target="_blank">add-on help</a>
-        for the details on the configuration.</p>
-
+        {{ content }}
     </section>
     <footer>
     </footer>

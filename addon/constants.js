@@ -1,4 +1,8 @@
+export const ADDON_NAME = "Add Torrent To"
+
 export const ROOT_FOLDER = "[root]";
+
+export const REFRESH_MENU = "[refresh]";
 
 export const DEFAULT_SETTINGS = {
     folders: ROOT_FOLDER + ":music:movies:images",
@@ -7,3 +11,5 @@ export const DEFAULT_SETTINGS = {
     password: "",
     client: "utorrent"
 };
+
+export const CATEGORY_SOURCE_USER = "user";

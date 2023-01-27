@@ -1,39 +1,33 @@
-import {UTorrentClient} from "./clients/utorrent.js";
-import {QBittorrentClient} from "./clients/qbittorrent.js";
 import {settings} from "./settings.js";
-
-function createClient() {
-    switch (settings.client()) {
-        case "qbittorrent":
-            return new QBittorrentClient();
-        default:
-            return new UTorrentClient();
-    }
-}
+import {createClient} from "./clients/clients.js";
+import {REFRESH_MENU} from "./constants.js";
+import {createContextMenu} from "./ui/context_menu.js";
 
 async function addTorrent(link, category) {
     await settings.load();
-
     const client = createClient();
 
-    if (link.startsWith("magnet:"))
-        return client.addMagnet(link, category);
-    else
-        return client.addTorrent(link, category);
+    if (category.endsWith(REFRESH_MENU)) {
+        await createMenus();
+    }
+    else {
+        if (link.startsWith("magnet:"))
+            return client.addMagnet(link, category);
+        else
+            return client.addTorrent(link, category);
+    }
+}
+
+async function createMenus() {
+    await settings.load();
+    const client = createClient();
+    const categories = await client.getTorrentCategories(false);
+
+    await createContextMenu(categories);
 }
 
 settings.load().then(async () => {
-    await browser.contextMenus.removeAll();
-
-    settings.folders().split(":").forEach((folder) => {
-        if (folder) {
-            chrome.contextMenus.create({
-                id: folder,
-                title: folder,
-                contexts: ["link"]
-            });
-        }
-    });
+    await createMenus();
 });
 
 browser.contextMenus.onClicked.addListener(function(info, tab) {

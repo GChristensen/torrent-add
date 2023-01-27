@@ -19,15 +19,19 @@ class Settings {
 
     async _loadPlatform() {
         if (!this._platform) {
-            const platformInfo = await browser.runtime.getPlatformInfo();
-            this._platform = {[platformInfo.os]: true};
+            this._platform = {};
 
-            if (navigator.userAgent.indexOf("Firefox") >= 0) {
+            if (browser.runtime.getPlatformInfo) {
+            const platformInfo = await browser.runtime.getPlatformInfo();
+
+                this._platform[platformInfo.os] = true;
+            }
+
+            if (navigator.userAgent.indexOf("Firefox") >= 0)
                 this._platform.firefox = true;
-            }
-            if (navigator.userAgent.indexOf("Chrome") >= 0) {
+
+            if (navigator.userAgent.indexOf("Chrome") >= 0)
                 this._platform.chrome = true;
-            }
         }
     }
 
@@ -36,8 +40,9 @@ class Settings {
         this._bin = merge(object?.[this._key] || {}, this._default);
     }
 
-    _load() {
-        return this._loadPlatform().then(() => this._loadSettings());
+    async _load() {
+        await this._loadPlatform();
+        await this._loadSettings();
     }
 
     async _save() {
@@ -55,7 +60,7 @@ class Settings {
 
     get(target, key, receiver) {
         if (key === "load")
-            return v => this._load();
+            return v => this._load(); // sic !
         else if (key === "default")
             return this._default;
         else if (key === "platform")
@@ -64,8 +69,10 @@ class Settings {
             return this._get;
         else if (key === "set")
             return this._set;
+        else if (key === "_bin")
+            return this._bin;
 
-        return val => {
+        return (val, save = true) => {
             let bin = this._bin;
 
             if (val === undefined)
@@ -80,7 +87,11 @@ class Settings {
                 bin[key] = val;
 
             let result = key in bin? bin[key]: deleted;
-            return this._save().then(() => result);
+
+            if (save)
+                return this._save().then(() => result);
+            else
+                return result;
         }
     }
 

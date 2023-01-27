@@ -29,5 +29,7 @@
 
   "icons": {
     "128": "ui/icons/logo.svg"
-  }
+  },
+
+  "content_security_policy": "default-src 'self'"
 }
