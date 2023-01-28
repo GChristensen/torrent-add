@@ -33,5 +33,9 @@
        "enabled": true,
        "path": "net_rules.json"
      }]
+   },
+
+   "content_security_policy": {
+     "extension_pages": "script-src 'self'; object-src 'self'"
    }
 }

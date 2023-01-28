@@ -31,5 +31,7 @@
     "128": "ui/icons/logo.svg"
   },
 
-  "content_security_policy": "default-src 'self'"
+  "content_security_policy": {
+      "extension_pages": "script-src 'self'; object-src 'self'"
+  }
 }
