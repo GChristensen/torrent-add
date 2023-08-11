@@ -46,14 +46,14 @@
 <div class="content">
     <h2 class="heading">Add Torrent To User Manual</h2>
 
-    <p><b>Add Torrent To</b> allows to instantly begin a download of the torrent content into a
+    <p><b>Add Torrent To</b> allows to instantly begin a download of the torrent into a
        configurable set of directories or categories available from the browser context menu.
        It is useful for preventing clutter in the download directory.
     </p>
 
-    <p>To begin a download, right-click the link to a torrent file or a magnet link and select the
-        desired category from the "Add Torrent To" submenu. The download of the torrent content
-        will start immediately in the selected directory or category.
+    <p>To begin a download, right-click the link to of a torrent file or a magnet link and select the
+        desired category from the "Add Torrent To" submenu. The download of the torrent
+        will start immediately to the selected directory or category.
     </p>
 
     <p><b>Add Torrent To</b> supports both the downloads in plain subdirectories of the main
@@ -74,7 +74,8 @@
         <img src="images/help/qbt-webui-settings.png">
     </p>
 
-    <p>If you are using download categories provided by the torrent client, enable one of the
+    <p>Using using download categories provided by the torrent client instead of plain folders
+        requires additional configuration. It is necessary to enable one of the
         two following settings:
         <ol>
             <li>Set the <i>Default Torrent Management Mode</i> to <i>Automatic</i>.</li>
@@ -93,13 +94,7 @@
 
     <p>The <b>Add Torrent To</b> may be not able to load categories from the torrent client if the
     client was started after the browser was loaded. In this case, use the [refresh] context menu item
-    to obtain the download categories. In the WebExtensions Manifest v3 version of the add-on
-    the context menu comprised of client categories may not refresh automatically
-    even if the torrent client is running. To refresh the menu, open the add-on
-    settings and click the <b>Refresh</b> link.</p>
-
-    <p>It is not necessary to change these settings if you are using plain user download
-    category names provided in the extension settings.</p>
+    or the corresponding link in the add-on settings to obtain the download categories.</p>
 
     <h3>Configuring uTorrent</h3>
     <p>Enable WebUI in uTorrent settings and specify username and password.

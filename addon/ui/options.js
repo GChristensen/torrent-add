@@ -21,7 +21,9 @@ async function init() {
 }
 
 async function saveOptions() {
-    await settings.folders(document.querySelector("#folders").value, false);
+    if (downloadToUserCategories())
+        await settings.folders(document.querySelector("#folders").value, false);
+
     await settings.host(document.querySelector("#host").value, false);
     await settings.user(document.querySelector("#user").value, false);
     await settings.password(document.querySelector("#password").value, false);
@@ -76,13 +78,11 @@ async function onCategorySourceChanged(e) {
 
 async function configureCategorySource() {
     if (downloadToUserCategories()) {
-        $("#folders").prop("disabled", false);
-        $("#client-categories-row").css("visibility", "hidden");
         $("#category-refresh-link").hide();
+        $("#folders").prop("disabled", false);
     }
     else {
         $("#folders").prop("disabled", true);
-        $("#client-categories-row").css("visibility", "visible");
         $("#category-refresh-link").show();
     }
 
@@ -93,8 +93,7 @@ async function refreshCategories() {
     const client = createClient();
     const categories = await client.getTorrentCategories();
 
-    if (!downloadToUserCategories())
-        $("#client-categories").val(categories.join(":"));
+    $("#folders").val(categories.join(":"));
 
     await createContextMenu(categories);
 }

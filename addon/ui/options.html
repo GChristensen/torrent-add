@@ -38,7 +38,7 @@
       }
 
       #client-categories-row {
-        visibility: hidden;
+        display: none;
       }
 
       #folders, #client-categories {
@@ -99,14 +99,15 @@
       </tr>
     </table>
 
-    <h3>Categories</h3>
+    <h3>Download Destination</h3>
     <table style="width: 100%">
       <tr>
-        <td style="width: 20%"><label>Category source</label></td>
+        <td style="width: 20%"><label>Category type</label></td>
         <td>
           <div id="category-source-container">
             <select id="category-source">
-              <option value="user" selected>User categories</option>
+              <option value="user" selected>Plain folders</option>
+              <option value="user-categories" selected>User categories</option>
               <option value="client">Torrent client categories</option>
             </select>
             <div class="spacer"></div>
@@ -115,12 +116,8 @@
         </td>
       </tr>
       <tr>
-        <td style="width: 20%"><label>User&nbsp;categories</label></td>
+        <td style="width: 20%"><label>Categories</label></td>
         <td><input type="text" id="folders"/></td>
-      </tr>
-      <tr id="client-categories-row">
-        <td style="width: 20%"><label>Client&nbsp;categories</label></td>
-        <td><input type="text" id="client-categories" disabled/></td>
       </tr>
     </table>
   </body>

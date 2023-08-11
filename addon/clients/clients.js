@@ -1,7 +1,7 @@
 import {settings} from "../settings.js";
 import {QBittorrentClient} from "./qbittorrent.js";
 import {UTorrentClient} from "./utorrent.js";
-import {CATEGORY_SOURCE_USER} from "../constants.js";
+import {CATEGORY_SOURCE_CLIENT_CATEGORIES} from "../constants.js";
 
 export function createClient() {
     switch (settings.client()) {
@@ -14,5 +14,5 @@ export function createClient() {
 
 export function downloadToUserCategories() {
     const categorySource = settings.category_source();
-    return !categorySource || categorySource === CATEGORY_SOURCE_USER;
+    return !categorySource || categorySource !== CATEGORY_SOURCE_CLIENT_CATEGORIES;
 }

@@ -1,6 +1,6 @@
 import {settings} from "../settings.js"
 import {fetchWithTimeout, showNotification} from "../utils.js";
-import {ROOT_FOLDER} from "../constants.js";
+import {CATEGORY_SOURCE_USER, CATEGORY_SOURCE_USER_CATEGORIES, ROOT_FOLDER} from "../constants.js";
 import {TorrentClient} from "./client_base.js";
 import {downloadToUserCategories} from "./clients.js";
 
@@ -98,8 +98,13 @@ export class QBittorrentClient extends TorrentClient {
             const prefs = await this.#fetchJSON("app", "preferences");
 
             if (downloadToUserCategories() /*|| !prefs.auto_tmm_enabled*/) {
-                const savePath = await this.#createSavePath(prefs, category);
-                form.append("savepath", savePath);
+                if (settings.category_source() === CATEGORY_SOURCE_USER) { // user's plain folders
+                    const savePath = await this.#createSavePath(prefs, category);
+                    form.append("savepath", savePath);
+                }
+                else if (settings.category_source() === CATEGORY_SOURCE_USER_CATEGORIES) { // user's categories
+                    form.append("category", category);
+                }
             }
             else
                 form.append("category", category);

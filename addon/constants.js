@@ -13,3 +13,5 @@ export const DEFAULT_SETTINGS = {
 };
 
 export const CATEGORY_SOURCE_USER = "user";
+export const CATEGORY_SOURCE_USER_CATEGORIES = "user-categories";
+export const CATEGORY_SOURCE_CLIENT_CATEGORIES = "client";
