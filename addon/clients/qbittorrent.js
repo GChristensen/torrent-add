@@ -42,24 +42,32 @@ export class QBittorrentClient extends TorrentClient {
         let result = false;
 
         try {
-            const loginURL = this.#makeAPIURL("auth", "login");
-            const resp = await fetchWithTimeout(loginURL, {
-                timeout,
-                method: "post",
-                headers: {"content-type": "application/x-www-form-urlencoded"},
-                body: new URLSearchParams({
-                    "username": settings.user(),
-                    "password": settings.password()
-                })
-            });
+            const versionURL = this.#makeAPIURL("app", "version")
+            const versionResp = await fetchWithTimeout(versionURL, {timeout});
 
-            if (!resp.ok || (await resp.text()) === "Fails.") {
-                const error = new Error(`HTTP error: ${resp.status}`);
-                error.addTorrentMessage = `Please check qBittorrent authentication credentials.`;
-                throw error;
-            }
-            else
+            if (versionResp.status === 200) {
                 result = true;
+            }
+            if (versionResp.status === 403) {
+                const loginURL = this.#makeAPIURL("auth", "login");
+                const resp = await fetchWithTimeout(loginURL, {
+                    timeout,
+                    method: "post",
+                    headers: {"content-type": "application/x-www-form-urlencoded"},
+                    body: new URLSearchParams({
+                        "username": settings.user(),
+                        "password": settings.password()
+                    })
+                });
+
+                if (!resp.ok || (await resp.text()) === "Fails.") {
+                    const error = new Error(`HTTP error: ${resp.status}`);
+                    error.addTorrentMessage = `Please check qBittorrent authentication credentials.`;
+                    throw error;
+                }
+                else
+                    result = true;
+            }
         }
         catch (e) {
             console.log(e);
@@ -116,7 +124,7 @@ export class QBittorrentClient extends TorrentClient {
                 showNotification("Error adding torrent.");
         }
         finally {
-            await this.#logout();
+            //await this.#logout();
         }
     }
 
