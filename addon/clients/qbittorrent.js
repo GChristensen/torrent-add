@@ -145,7 +145,7 @@ export class QBittorrentClient extends TorrentClient {
             }
         }
         finally {
-            await this.#logout();
+            //await this.#logout();
         }
 
         return result;
@@ -161,7 +161,7 @@ export class QBittorrentClient extends TorrentClient {
             }
         }
         finally {
-            await this.#logout();
+            //await this.#logout();
         }
 
         return result;
