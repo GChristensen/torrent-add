@@ -3,6 +3,21 @@ import {createClient} from "./clients/clients.js";
 import {REFRESH_MENU} from "./constants.js";
 import {createContextMenu} from "./ui/context_menu.js";
 
+async function openClientWebUI() {
+    await settings.load();
+
+    browser.tabs.create({
+        "url": settings.host(), "active": true
+    });
+}
+
+const action = _MANIFEST_V3
+    ? browser.action
+    : browser.browserAction;
+
+action.onClicked.addListener(openClientWebUI);
+
+
 async function addTorrent(link, category) {
     await settings.load();
     const client = createClient();

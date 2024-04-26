@@ -6,9 +6,6 @@ export async function createContextMenu(categories) {
 
     const useClientCategories = !downloadToUserCategories();
 
-    // if (useClientCategories)
-    //     categories.unshift(REFRESH_MENU);
-
     if (useClientCategories && !categories.length) {
         chrome.contextMenus.create({
             id: ADDON_NAME,
@@ -34,6 +31,18 @@ export async function createContextMenu(categories) {
             title: categories[0],
             contexts: ["link"]
         });
+
+        if (useClientCategories) {
+            chrome.contextMenus.create({
+                type: "separator",
+                contexts: ["link"]
+            });
+            chrome.contextMenus.create({
+                id: REFRESH_MENU,
+                title: REFRESH_MENU,
+                contexts: ["link"]
+            });
+        }
     }
     else {
         categories.forEach(folder => {
@@ -45,5 +54,17 @@ export async function createContextMenu(categories) {
                 });
             }
         });
+
+        if (useClientCategories) {
+            chrome.contextMenus.create({
+                type: "separator",
+                contexts: ["link"]
+            });
+            chrome.contextMenus.create({
+                id: REFRESH_MENU,
+                title: REFRESH_MENU,
+                contexts: ["link"]
+            });
+        }
     }
 }

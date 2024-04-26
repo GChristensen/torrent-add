@@ -19,6 +19,13 @@
      "type": "module"
    },
 
+   "action": {
+     "default_icon": {
+       "96": "ui/icons/logo96.png"
+     },
+     "default_title": "Add Torrent To"
+   },
+
    "options_ui": {
      "page": "ui/options.html",
      "browser_style": true

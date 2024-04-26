@@ -48,13 +48,17 @@
 
     <p><b>Add Torrent To</b> allows to instantly begin a download of the torrent into a
        configurable set of directories or categories available from the browser context menu.
-       It is useful for preventing clutter in the download directory.
+       It may be useful for preventing clutter in the download directory.
     </p>
 
     <p>To begin a download, right-click the link to of a torrent file or a magnet link and select the
         desired category from the "Add Torrent To" submenu. The download of the torrent
         will start immediately to the selected directory or category.
     </p>
+
+
+    <p><i>If the attempt to add a torrent is failed, the add-on will notify you through a standard browser toast
+        notification. Please check your system tray if something goes wrong.</i></p>
 
     <p><b>Add Torrent To</b> supports both the downloads in plain subdirectories of the main
         torrent download folder and the downloads with the torrent categories provided by the torrent
@@ -67,14 +71,14 @@
 
     <p>Enable WebUI in qBittorrent settings and specify username and password. It is possible
         to bypass authentication for the local addresses, or addresses from the local network.
-        You need to specify an IPv6 subnet mask (for example, fe80::/64) if IPv6 is enabled in
-        your router.
+        If IPv6 is enabled in your router, it is necessary to specify an IPv6 subnet mask
+        (for example, fe80::/64).
     </p>
     <p class="figure">
         <img src="images/help/qbt-webui-settings.png">
     </p>
 
-    <p>Using using download categories provided by the torrent client instead of plain folders
+    <p>Using download categories provided by the torrent client instead of plain folders
         requires additional configuration. It is necessary to enable one of the
         two following settings:
         <ol>
