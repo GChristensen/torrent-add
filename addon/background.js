@@ -6,9 +6,18 @@ import {createContextMenu} from "./ui/context_menu.js";
 async function openClientWebUI() {
     await settings.load();
 
-    browser.tabs.create({
-        "url": settings.host(), "active": true
-    });
+    const clientWebUIURL = settings.host();
+
+    if (clientWebUIURL) {
+        browser.tabs.create({
+            "url": clientWebUIURL, "active": true
+        });
+    }
+    else {
+        browser.tabs.create({
+            "url": browser.runtime.getURL("/ui/options.html?init=true"), "active": true
+        });
+    }
 }
 
 const action = _MANIFEST_V3

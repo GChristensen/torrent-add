@@ -6,6 +6,12 @@ import {CATEGORY_SOURCE_USER} from "../constants.js";
 $(init);
 
 async function init() {
+    const params =  new URLSearchParams(location.search);
+
+    if (params.get("init")) {
+        $("body").css("max-width", "50%");
+    }
+
     $("#host").on("input", saveOptions);
     $("#user").on("input", saveOptions);
     $("#password").on("input", saveOptions);
