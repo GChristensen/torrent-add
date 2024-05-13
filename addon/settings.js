@@ -10,7 +10,7 @@ class Settings {
             host: "http://localhost:8080/gui/",
             user: "",
             password: "",
-            client: "utorrent"
+            client: "qbittorrent"
         };
 
         this._bin = {};

@@ -34,6 +34,7 @@ export async function createContextMenu(categories) {
 
         if (useClientCategories) {
             chrome.contextMenus.create({
+                id: REFRESH_MENU + "-separator",
                 type: "separator",
                 contexts: ["link"]
             });
@@ -57,6 +58,7 @@ export async function createContextMenu(categories) {
 
         if (useClientCategories) {
             chrome.contextMenus.create({
+                id: REFRESH_MENU + "-separator",
                 type: "separator",
                 contexts: ["link"]
             });
