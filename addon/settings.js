@@ -10,7 +10,8 @@ class Settings {
             host: "http://localhost:8080/gui/",
             user: "",
             password: "",
-            client: "qbittorrent"
+            client: "qbittorrent",
+            notification_mode: "failure"
         };
 
         this._bin = {};

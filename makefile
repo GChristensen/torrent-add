@@ -15,7 +15,7 @@ get-version:
 .PHONY: sign
 sign:
 	make firefox-mv2
-	cd addon; web-ext sign -a ../build -i web-ext-artifacts .web-extension-id *.mv2* *.mv3* background_worker.js version.txt `cat $(HOME)/.amo/creds`
+	cd addon; web-ext sign --channel unlisted -a ../build -i web-ext-artifacts .web-extension-id *.mv2* *.mv3* background_worker.js version.txt `cat $(HOME)/.amo/creds`
 
 .PHONY: build
 build:

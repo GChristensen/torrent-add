@@ -32,7 +32,9 @@ export class TorrentClient {
         }
         catch (e) {
             console.error(e);
-            showNotification(`Error downloading torrent file.`);
+
+            if (settings.notification_mode() === "failure")
+                showNotification(`Error downloading torrent file.`);
         }
     }
 

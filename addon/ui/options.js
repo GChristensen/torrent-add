@@ -23,6 +23,8 @@ async function init() {
 
     $("#folders").on("input", async e => {await saveOptions(e); await refreshCategories();});
 
+    $("[name='notifications']").on("change", saveOptions);
+
     await restoreOptions();
 }
 
@@ -35,6 +37,7 @@ async function saveOptions() {
     await settings.password(document.querySelector("#password").value, false);
     await settings.client(document.querySelector("#client").value, false);
     await settings.category_source(document.querySelector("#category-source").value);
+    await settings.notification_mode(getSelectedNotificationMode());
 }
 
 async function restoreOptions() {
@@ -53,6 +56,31 @@ async function restoreOptions() {
 
     document.querySelector("#category-source").value = categorySource || CATEGORY_SOURCE_USER;
     await configureCategorySource();
+
+    setSelectedNotificationMode(settings.notification_mode() || "failure");
+}
+
+function getSelectedNotificationMode() {
+    const radios = document.getElementsByName('notifications');
+    let selectedValue = null;
+
+    radios.forEach((radio) => {
+        if (radio.checked) {
+            selectedValue = radio.value;
+        }
+    });
+
+    return selectedValue;
+}
+
+function setSelectedNotificationMode(mode) {
+    const radios = document.getElementsByName('notifications');
+
+    radios.forEach((radio) => {
+        if (radio.value === mode) {
+            radio.checked = true;
+        }
+    });
 }
 
 async function onClientChanged(e) {

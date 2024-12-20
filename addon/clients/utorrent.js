@@ -90,8 +90,10 @@ export class UTorrentClient extends TorrentClient {
             headers: this.#makeuTorrentAuthHeaders()
         });
 
-        if (!response.ok)
+        if (!response.ok && settings.notification_mode() === "failure")
             showNotification("Error adding torrent.");
+        else if (response.ok && settings.notification_mode() === "success")
+            showNotification("Successfully added torrent.");
     }
 
     async addTorrent(link, category) {
@@ -105,8 +107,10 @@ export class UTorrentClient extends TorrentClient {
                 headers: this.#makeuTorrentAuthHeaders()
             });
 
-            if (!response.ok)
+            if (!response.ok && settings.notification_mode() === "failure")
                 showNotification("Error adding torrent.");
+            else if (response.ok && settings.notification_mode() === "success")
+                showNotification("Successfully added torrent.");
         }
     }
 }

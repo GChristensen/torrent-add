@@ -5,3 +5,4 @@
 /addon/.web-extension-id
 /addon/_metadata
 *.zip
+/addon/.amo-upload-uuid

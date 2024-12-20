@@ -120,8 +120,10 @@ export class QBittorrentClient extends TorrentClient {
             const apiURL = this.#makeAPIURL("torrents", "add");
             const response = await fetch(apiURL, {method: "POST", body: form});
 
-            if (!response.ok)
+            if (!response.ok && settings.notification_mode() === "failure")
                 showNotification("Error adding torrent.");
+            else if (response.ok && settings.notification_mode() === "success")
+                showNotification("Successfully added torrent.");
         }
         finally {
             //await this.#logout();
