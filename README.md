@@ -12,7 +12,7 @@ configurable set of directories in uTorrent or qBittorrent with enabled WebUI.
 The following call will add provided URL to the specified torrent download directory:
 
 ```javascript
-// On Crhome the addon id is jlbkggamnpibjmibgcohffcncainphbj
+// On Chrome the addon id is jlbkggamnpibjmibgcohffcncainphbj
 browser.runtime.sendMessage("torrent-add-we@gchristensen.github.io", {
      type: "ADD_TORRENT", 
      url: "http://example.com/download.torrent",
