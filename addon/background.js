@@ -68,15 +68,40 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
 });
 
 if (browser.webRequest) {
+    function setRequestHeader(headers, name, value) {
+        const lowerName = name.toLowerCase();
+        const header = headers.find(h => h.name.toLowerCase() === lowerName);
+
+        if (header)
+            header.value = value;
+        else
+            headers.push({name, value});
+    }
+
+    async function getActiveTabURL() {
+        const [tab] = await browser.tabs.query({active: true, currentWindow: true});
+        return tab?.url;
+    }
+
     browser.webRequest.onBeforeSendHeaders.addListener(
-        (requestDetails) => {
-            for (var header of requestDetails.requestHeaders) {
+        async (requestDetails) => {
+            const headers = requestDetails.requestHeaders;
+
+            for (let header of headers) {
                 if (header.name.toLowerCase() === "cookie") {
                     if (header.value && header.value.indexOf("bb_dl=") === -1)
                         header.value = header.value + "; bb_dl=" + requestDetails.url.split("=")[1];
                 }
             }
-            return {requestHeaders: requestDetails.requestHeaders};
+
+            setRequestHeader(headers, "Origin", new URL(requestDetails.url).origin);
+            setRequestHeader(headers, "Sec-Fetch-Dest", "document");
+
+            const activeTabURL = await getActiveTabURL();
+            if (activeTabURL)
+                setRequestHeader(headers, "Referer", activeTabURL);
+
+            return {requestHeaders: headers};
         },
         {urls: ["*://*/forum/dl.php?t=*"]},
         ["blocking", "requestHeaders"]
