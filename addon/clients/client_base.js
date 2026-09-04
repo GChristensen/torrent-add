@@ -2,6 +2,7 @@ import {settings} from "../settings.js";
 import {showNotification} from "../utils.js";
 import {downloadToUserCategories} from "./clients.js";
 import {CATEGORY_SOURCE_USER} from "../constants.js";
+import {checkLink} from "../site_rules.js";
 
 export class TorrentClient {
     #extractFileName(response) {
@@ -13,6 +14,10 @@ export class TorrentClient {
             fileName = (new Date().getTime()) + ".torrent";
 
         return fileName;
+    }
+
+    _checkLink(link) {
+        return checkLink(link);
     }
 
     async _downloadFileAsForm(link, formField) {

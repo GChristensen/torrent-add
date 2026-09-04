@@ -176,6 +176,8 @@ export class QBittorrentClient extends TorrentClient {
     }
 
     async addTorrent(link, category) {
+        if (!this._checkLink(link)) return;
+
         const form = await this._downloadFileAsForm(link, "torrents");
         return this.#addTorrent(category, form);
     }

@@ -97,6 +97,8 @@ export class UTorrentClient extends TorrentClient {
     }
 
     async addTorrent(link, category) {
+        if (!this._checkLink(link)) return;
+
         const form = await this._downloadFileAsForm(link, "torrent_file");
 
         if (form) {
