@@ -1,10 +1,6 @@
-# Add Torrent
-
-This is a development page. Please visit the main site at: https://gchristensen.github.io/torrent-add/
-
 #### About 
 
-Allows to instantly begin download of a torrent or a magnet link into a 
+The [Add Torrent To](https://gchristensen.github.io/torrent-add/) browser extension lets to instantly begin download of a torrent or a magnet link into a 
 configurable set of directories in uTorrent or qBittorrent with enabled WebUI. 
 
 #### Automation
