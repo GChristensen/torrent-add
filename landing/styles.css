@@ -39,7 +39,7 @@ h1 span { color: var(--brand); }
 .lead { font-size: 18px; color: var(--muted); margin: 0 0 28px; max-width: 30em; }
 .cta { display: flex; flex-wrap: wrap; gap: 12px; }
 .btn {
-  display: inline-flex; align-items: center; gap: 10px;
+  display: inline-flex; align-items: center; gap: 12px;
   padding: 12px 20px; border-radius: 10px; font-weight: 600; font-size: 15px;
   text-decoration: none; border: 1px solid var(--line); background: var(--surface);
   transition: transform .12s, box-shadow .12s, border-color .12s;
@@ -47,7 +47,7 @@ h1 span { color: var(--brand); }
 .btn:hover { transform: translateY(-1px); border-color: var(--brand); box-shadow: 0 6px 18px rgba(19,169,98,.15); }
 .btn.primary { background: var(--brand); border-color: var(--brand); color: #fff; }
 .btn.primary:hover { background: var(--brand-dark); border-color: var(--brand-dark); }
-.btn svg { width: 18px; height: 18px; flex: none; }
+.btn-icon { width: 24px; height: 24px; flex: none; display: block; }
 .note { font-size: 13px; color: var(--muted); margin-top: 14px; }
 
 /* mockup */
