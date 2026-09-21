@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Add Torrent To</title>
+<meta name="description" content="A browser extension that instantly starts a torrent download into a configurable set of directories, right from the context menu.">
+<link rel="icon" href="img/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="brand" href="#"><img src="img/logo.svg" alt="">Add Torrent To</a>
+    <nav>
+      <a href="#features">Features</a>
+      <a href="https://github.com/GChristensen/torrent-add">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <h1>Send torrents to the <span>right folder</span> in one click.</h1>
+        <p class="lead">Add Torrent To lets you instantly start a download into a configurable set of directories, straight from the browser context menu. No more cluttered download folder.</p>
+        <div class="cta">
+          <a class="btn primary" href="https://addons.mozilla.org/en-US/firefox/addon/add-torrent-to/">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0-5-5m5 5 5-5M5 20h14"/></svg>
+            Add to Firefox
+          </a>
+          <a class="btn" href="https://chrome.google.com/webstore/detail/add-torrent-to/jlbkggamnpibjmibgcohffcncainphbj" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0-5-5m5 5 5-5M5 20h14"/></svg>
+            Add to Chrome
+          </a>
+        </div>
+        <p class="note">Works with uTorrent and qBittorrent WebUI.</p>
+      </div>
+
+      <div class="stage" aria-label="Mockup: right-clicking a download link and choosing Add Torrent To, then a folder">
+        <div class="page">
+          <div class="bar"><i></i><i></i><i></i></div>
+          <h3>Get Debian</h3>
+          <p>The universal operating system. Grab the latest installer image over BitTorrent.</p>
+          <a class="dl" href="#">Download</a>
+          <div class="skeleton"><b></b><b></b><b></b></div>
+        </div>
+
+        <div class="menu">
+          <div class="item">Copy Link</div>
+          <div class="item">Save Link As…</div>
+          <div class="sep"></div>
+          <div class="item">Inspect (Q)</div>
+          <div class="sep"></div>
+          <div class="item ext active"><img src="img/logo.svg" alt="">Add Torrent To</div>
+        </div>
+        <div class="submenu">
+          <div class="item">[root]</div>
+          <div class="item active">software</div>
+          <div class="item">music</div>
+          <div class="item">movies</div>
+          <div class="item">images</div>
+        </div>
+
+        <div class="toast">
+          <img src="img/logo.svg" alt="">
+          <div>
+            <strong>Torrent added to “software”</strong>
+            <span>debian-13.0.0-amd64-netinst.iso</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="features" id="features">
+    <div class="wrap">
+      <div class="intro">
+        <h2>Downloads that land where they belong</h2>
+        <p>Set up your folders once, then file every torrent as you start it.</p>
+      </div>
+      <div class="grid">
+        <div class="feature">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l14 9-6 1.5L10 20z"/></svg></div>
+          <h3>One click from any link</h3>
+          <p>Right-click a torrent file or magnet link, pick a folder, and the download starts. No dialogs, no copy-paste.</p>
+        </div>
+        <div class="feature">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>
+          <h3>Your own folder list</h3>
+          <p>Define directories or categories such as software, music and movies. Or pull categories live from qBittorrent.</p>
+        </div>
+        <div class="feature">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></div>
+          <h3>Your client, your machine</h3>
+          <p>Talks to the WebUI of a running uTorrent or qBittorrent instance. Nothing extra to install.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="final">
+    <div class="wrap">
+      <h2>Keep your downloads tidy</h2>
+      <p>Free browser extension for Firefox and Chrome.</p>
+      <div class="cta">
+        <a class="btn primary" href="https://addons.mozilla.org/en-US/firefox/addon/add-torrent-to/">Firefox Add-On</a>
+        <a class="btn" href="https://chrome.google.com/webstore/detail/add-torrent-to/jlbkggamnpibjmibgcohffcncainphbj" target="_blank" rel="noopener">Chrome Extension</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Add Torrent To</span>
+    <a href="https://github.com/GChristensen/torrent-add">Source on GitHub</a>
+  </div>
+</footer>
+
+<script src="main.js" defer></script>
+</body>
+</html>

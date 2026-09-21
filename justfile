@@ -30,3 +30,6 @@ firefox-mv3:
 
 chrome-mv3:
     cd addon && python ../scripts/mkmanifest.py manifest.json.mv3.chrome manifest.json `cat version.txt`
+
+landing:
+    cd landing; npm run build
