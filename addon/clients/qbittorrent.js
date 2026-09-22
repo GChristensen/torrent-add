@@ -26,12 +26,12 @@ export class QBittorrentClient extends TorrentClient {
 
     #fetchAPI(api, method) {
         const apiURL = this.#makeAPIURL(api, method);
-        return fetch(apiURL);
+        return fetch(apiURL, {credentials: "include"});
     }
 
     #postAPI(api, method) {
         const apiURL = this.#makeAPIURL(api, method);
-        return fetch(apiURL, {method: "post"});
+        return fetch(apiURL, {method: "post", credentials: "include"});
     }
 
     #fetchJSON(api, method) {
@@ -118,7 +118,7 @@ export class QBittorrentClient extends TorrentClient {
                 form.append("category", category);
 
             const apiURL = this.#makeAPIURL("torrents", "add");
-            const response = await fetch(apiURL, {method: "POST", body: form});
+            const response = await fetch(apiURL, {method: "POST", body: form, credentials: "include"});
 
             if (!response.ok && settings.notification_mode() === "failure")
                 showNotification("Error adding torrent.");
@@ -136,7 +136,7 @@ export class QBittorrentClient extends TorrentClient {
         try {
             if (await this.#login(verbose)) {
                 const apiURL = this.#makeAPIURL("torrents", "categories");
-                const response = await fetch(apiURL);
+                const response = await fetch(apiURL, {credentials: "include"});
 
                 if (response.ok) {
                     const categories = await response.json();
