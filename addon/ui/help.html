@@ -2,146 +2,257 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Add Torrent To User Manual</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add Torrent To Help</title>
+
+    <link rel="stylesheet" type="text/css" media="all" href="options.css"/>
 
     <style>
-        * {
-            font-family: "Segoe UI", Arial, sans-serif;
-            font-size: 11pt;
+        .doc {
+            font-size: 15px;
+            line-height: 1.6;
         }
 
-        body {
+        .doc h2 {
+            font-size: 18px;
+        }
+
+        .doc h3 {
+            margin: 4px 0 0;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .doc p, .doc ul, .doc ol {
+            margin: 0;
+        }
+
+        .doc ul, .doc ol {
+            padding-left: 22px;
+        }
+
+        .doc li + li {
+            margin-top: 4px;
+        }
+
+        .doc code {
+            font-family: var(--mono);
+            font-size: 13px;
+            background: var(--chip);
+            border-radius: 4px;
+            padding: 1px 5px;
+        }
+
+        .doc .ui {
+            font-weight: 600;
+        }
+
+        .doc figure {
+            margin: 0;
+            text-align: center;
+        }
+
+        .doc figure img {
+            max-width: 100%;
+            border: 1px solid var(--divider);
+            border-radius: 8px;
+        }
+
+        .types {
             display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
-        .placeholder {
-            flex-grow: 1;
+        .type {
+            border: 1px solid var(--divider);
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
         }
 
-        .content {
-            max-width: 780px;
-            margin: 0 10px;
+        .type .for {
+            font-size: 13px;
+            color: var(--muted);
         }
 
-        .content p {
-            text-align: justify;
-        }
-
-        .heading {
-            text-align: center;
-        }
-
-        p.figure {
-            text-align: center;
-        }
-
-        .mono {
-            font-family: "Lucida Console", monospace;
+        .note {
+            background: var(--bg);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 14px;
+            color: var(--muted);
         }
     </style>
 </head>
 <body>
-<div class="placeholder"></div>
+<div id="settings-container" class="doc">
 
-<div class="content">
-    <h2 class="heading">Add Torrent To User Manual</h2>
+    <header class="top">
+        <div class="brand">
+            <img class="logo" src="/ui/icons/logo.svg" alt="">
+            <div>
+                <h1>Add Torrent To Help</h1>
+                <p class="tagline">Send torrents straight to the right folder of your torrent client</p>
+            </div>
+        </div>
+    </header>
 
-    <p><b>Add Torrent To</b> allows to instantly begin a download of the torrent into a
-       configurable set of directories or categories available from the browser context menu.
-       It may be useful for preventing clutter in the download directory.
-    </p>
+    <section class="card">
+        <h2>How it works</h2>
+        <p><b>Add Torrent To</b> sends torrent files and magnet links to the web interface of qBittorrent or
+            µTorrent with a single click, directly into the folder or category you choose. This keeps the
+            download folder of the client tidy and saves you from moving files around afterwards.</p>
+        <p>Right-click a link to a <code>.torrent</code> file or a magnet link, open the
+            <span class="ui">Add Torrent To</span> submenu, and pick a destination. The client starts the
+            download right away.</p>
+        <p>Clicking the toolbar button of the add-on opens the web interface of your torrent client.</p>
+    </section>
 
-    <p>To begin a download, right-click the link to of a torrent file or a magnet link and select the
-        desired category from the "Add Torrent To" submenu. The download of the torrent
-        will start immediately to the selected directory or category.
-    </p>
+    <section class="card">
+        <h2>Opening the settings</h2>
+        <ul>
+            <li>Right-click the toolbar button of the add-on and choose <span class="ui">Settings</span>.</li>
+            <li>Or open the settings of <b>Add Torrent To</b> from the add-ons page of the browser.</li>
+        </ul>
+        <p>Until the web interface address is set, the toolbar button opens the settings instead of
+            the client.</p>
+        <p>All changes in the settings are saved immediately; there is nothing to confirm.</p>
+    </section>
 
-
-    <p><i>If the attempt to add a torrent is failed, the add-on will notify you through a standard browser toast
-        notification. Please check your system tray if something goes wrong.</i></p>
-
-    <p><b>Add Torrent To</b> supports both the downloads in plain subdirectories of the main
-        torrent download folder and the downloads with the torrent categories provided by the torrent
-        client. In the recent case, it is possible to specify a custom download directory for each
-        category in the torrent client settings. Such directories may be completely unrelated
-        to the main torrent download folder.
-        Please see the section below for the details on configuring your torrent client.</p>
-
-    <h3>Configuring qBittorrent</h3>
-
-    <p>Enable WebUI in qBittorrent settings and specify username and password. It is possible
-        to bypass authentication for the local addresses, or addresses from the local network.
-        If IPv6 is enabled in your router, it is necessary to specify an IPv6 subnet mask
-        (for example, fe80::/64).
-    </p>
-    <p class="figure">
-        <img src="images/help/qbt-webui-settings.png">
-    </p>
-
-    <p>Using download categories provided by the torrent client instead of plain folders
-        requires additional configuration. It is necessary to enable one of the
-        two following settings:
+    <section class="card">
+        <h2>Connecting to the client</h2>
         <ol>
-            <li>Set the <i>Default Torrent Management Mode</i> to <i>Automatic</i>.</li>
-            <li>Check the <i>Use Category paths in Manual Mode</i> option.</li>
+            <li>Enable the web interface in the settings of your torrent client, and set a user name and
+                password there (see the client sections below).</li>
+            <li>In the add-on settings, choose your client, enter the address of its web interface, and the same
+                user name and password.</li>
+            <li>Click <span class="ui">Test connection</span>. “Connected” means the add-on can reach
+                the client and sign in.</li>
         </ol>
-    </p>
+        <p>The address usually looks like <code>http://localhost:8080/</code> for qBittorrent and
+            <code>http://localhost:8080/gui/</code> for µTorrent. Use the address and port that are set in the
+            client.</p>
+    </section>
 
-    <p class="figure">
-        <img src="images/help/qbt-torrent-management-modes.png">
-    </p>
+    <section class="card">
+        <h2>Download destinations</h2>
+        <p>The <span class="ui">Download destination</span> setting decides what the items of the
+            <span class="ui">Add Torrent To</span> menu are and how the client understands them. There are
+            three types.</p>
 
-    <p>Use the category context menu in the qBittorrent sidebar to add new categories.</p>
-    <p class="figure">
-        <img src="images/help/qbt-categories.png">
-    </p>
+        <div class="types">
+            <div class="type">
+                <h3>Folders</h3>
+                <span class="for">qBittorrent and µTorrent</span>
+                <p>Each name is a subfolder of the default download folder of the client. For example,
+                    with the default folder <code>D:\Downloads</code>, choosing <code>Movies</code> saves the
+                    torrent to <code>D:\Downloads\Movies</code>.</p>
+                <p><span class="ui">Default location</span> saves the torrent to the default download folder
+                    itself. Use the <span class="ui">+ Default location</span> button to add it if it is
+                    missing.</p>
+                <p>Choose this type if all you need is to sort downloads into subfolders. It needs no setup
+                    in the client.</p>
+            </div>
 
-    <p>The <b>Add Torrent To</b> may be not able to load categories from the torrent client if the
-    client was started after the browser was loaded. In this case, use the [refresh] context menu item
-    or the corresponding link in the add-on settings to obtain the download categories.</p>
+            <div class="type">
+                <h3>Categories</h3>
+                <span class="for">qBittorrent only</span>
+                <p>Each name you type is sent to qBittorrent as a category. The torrent is labelled with
+                    that category, and qBittorrent saves it to the folder configured for the category,
+                    which can be anywhere, even on a different drive.</p>
+                <p>Type the names exactly as they appear in qBittorrent. Choose this type when you want to
+                    pick and order only some of your qBittorrent categories, or mix them with separators.
+                    qBittorrent has to be set up to use category folders (see below).</p>
+            </div>
 
-    <h3>Configuring uTorrent</h3>
-    <p>Enable WebUI in uTorrent settings and specify username and password.
-    </p>
+            <div class="type">
+                <h3>From client</h3>
+                <span class="for">qBittorrent only</span>
+                <p>The add-on loads the list of categories from qBittorrent itself, so the menu always
+                    matches the client. You can't edit or reorder this list in the add-on: add, remove,
+                    or rename categories in qBittorrent.</p>
+                <p>The list is loaded when the browser starts. If qBittorrent was not running then, or you
+                    changed its categories later, choose <code>[refresh]</code> at the end of the
+                    <span class="ui">Add Torrent To</span> menu, or click
+                    <span class="ui">Refresh from client</span> in the settings.</p>
+                <p>As with <span class="ui">Categories</span>, qBittorrent has to be set up to use category
+                    folders.</p>
+            </div>
+        </div>
+    </section>
 
-    <p class="figure">
-        <img src="images/help/ut-webui-settings.png">
-    </p>
+    <section class="card">
+        <h2>Editing the list</h2>
+        <ul>
+            <li>Type a name and press <kbd>Enter</kbd> to add it.</li>
+            <li>Click <b>×</b> on an item to remove it, or press <kbd>⌫</kbd> in the empty input to remove
+                the last one.</li>
+            <li>Drag items to change their order in the menu. With the keyboard, focus an item and press
+                <kbd>Alt</kbd>+<kbd>←</kbd> or <kbd>Alt</kbd>+<kbd>→</kbd>.</li>
+            <li>Add <code>-</code> as an item to put a separator line into the menu at that place.</li>
+            <li>Names can't contain a colon (<code>:</code>).</li>
+        </ul>
+        <p>The <span class="ui">Context menu preview</span> under the list shows what the menu will look
+            like.</p>
+    </section>
 
-    <p>Specify the default download directory.
-    </p>
+    <section class="card">
+        <h2>Notifications</h2>
+        <p>The add-on shows a system notification after it sends a torrent:
+            <span class="ui">Always</span> reports both successes and errors,
+            <span class="ui">On failure</span> reports only errors, and <span class="ui">Never</span> stays
+            quiet.</p>
+        <p class="note">If nothing seems to happen after adding a torrent, look for a notification in the
+            notification area of your system, and make sure notifications from the browser are allowed.</p>
+    </section>
 
-    <p class="figure">
-        <img src="images/help/ut-download-directory.png">
-    </p>
+    <section class="card">
+        <h2>Setting up qBittorrent</h2>
+        <p>Open <span class="ui">Tools › Options › Web UI</span>, enable the web user interface, and set a
+            user name and password. You can also let qBittorrent skip authentication for clients on
+            localhost or your local network. If IPv6 is enabled in your router, add your IPv6 subnet to the
+            list as well, for example <code>fe80::/64</code>.</p>
+        <figure><img src="images/help/qbt-webui-settings.png" alt="qBittorrent Web UI settings"></figure>
 
-    <p>uTorrent does not support retrieval of torrent download categories (in uTorrent they are
-        called labels) through the Web API.
-    </p>
+        <p>To use the <span class="ui">Categories</span> or <span class="ui">From client</span> types, let
+            qBittorrent save torrents to category folders. In <span class="ui">Options › Downloads</span>,
+            do one of the following:</p>
+        <ul>
+            <li>Set <span class="ui">Default Torrent Management Mode</span> to
+                <span class="ui">Automatic</span>, or</li>
+            <li>Turn on <span class="ui">Use Category paths in Manual Mode</span>.</li>
+        </ul>
+        <figure><img src="images/help/qbt-torrent-management-modes.png" alt="qBittorrent torrent management mode settings"></figure>
 
-    <h3>Configuring the Extension</h3>
+        <p>To create a category and set its folder, right-click <span class="ui">Categories</span> in the
+            qBittorrent sidebar.</p>
+        <figure><img src="images/help/qbt-categories.png" alt="qBittorrent category context menu"></figure>
+    </section>
 
-    <p>Specify the torrent client name, WebUI URL, and authentication credentials you configured in
-        the torrent client at the previous steps.</p>
+    <section class="card">
+        <h2>Setting up µTorrent</h2>
+        <p>Open <span class="ui">Options › Preferences › Advanced › Web UI</span>, enable the web
+            interface, and set a user name and password.</p>
+        <figure><img src="images/help/ut-webui-settings.png" alt="µTorrent Web UI settings"></figure>
 
-    <p class="figure">
-        <img src="images/help/addon-authentication.png">
-    </p>
+        <p>Set the default download folder in <span class="ui">Preferences › Directories</span>. The
+            <span class="ui">Folders</span> you add in the add-on are subfolders of it.</p>
+        <figure><img src="images/help/ut-download-directory.png" alt="µTorrent download directory settings"></figure>
 
-    <p>Specify the torrent download category source, and the categories separated by the colon
-        character if you are using the user-provided categories.</p>
+        <p>µTorrent supports only the <span class="ui">Folders</span> type: its web interface does not let
+            add-ons use its labels.</p>
+    </section>
 
-    <p class="figure">
-        <img src="images/help/addon-categories.png">
-    </p>
-
-    <p>In the extension settings, it is not possible to edit or reorder download categories obtained
-        from the torrent client.</p>
+    <footer class="foot">
+        <a href="options.html">Back to settings</a>
+        <span class="foot-links">
+            <a href="https://gchristensen.github.io/torrent-add" target="_blank">Homepage</a>
+            <a href="https://gchristensen.github.io/" target="_blank">More add-ons</a>
+        </span>
+    </footer>
 </div>
-
-<div class="placeholder"></div>
 </body>
 </html>
-
-
-
