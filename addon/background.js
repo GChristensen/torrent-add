@@ -1,6 +1,6 @@
 import {settings} from "./settings.js";
 import {createClient} from "./clients/clients.js";
-import {REFRESH_MENU} from "./constants.js";
+import {REFRESH_MENU, SETTINGS_MENU} from "./constants.js";
 import {createContextMenu} from "./ui/context_menu.js";
 
 async function openClientWebUI() {
@@ -55,7 +55,11 @@ settings.load().then(async () => {
 });
 
 browser.contextMenus.onClicked.addListener(function(info, tab) {
-    if (info.linkUrl)
+    if (info.menuItemId === SETTINGS_MENU)
+        browser.tabs.create({
+            "url": browser.runtime.getURL("/ui/options.html"), "active": true
+        });
+    else if (info.linkUrl)
         return addTorrent(info.linkUrl, info.menuItemId);
 });
 

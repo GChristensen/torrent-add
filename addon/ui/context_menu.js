@@ -1,8 +1,14 @@
-import {ADDON_NAME, REFRESH_MENU} from "../constants.js";
+import {ADDON_NAME, MENU_SEPARATOR, REFRESH_MENU, SETTINGS_MENU} from "../constants.js";
 import {downloadToUserCategories} from "../clients/clients.js";
 
 export async function createContextMenu(categories) {
     await browser.contextMenus.removeAll();
+
+    chrome.contextMenus.create({
+        id: SETTINGS_MENU,
+        title: "Settings",
+        contexts: [_MANIFEST_V3? "action": "browser_action"]
+    });
 
     const useClientCategories = !downloadToUserCategories();
 
@@ -46,8 +52,15 @@ export async function createContextMenu(categories) {
         }
     }
     else {
-        categories.forEach(folder => {
-            if (folder) {
+        categories.forEach((folder, i) => {
+            if (folder === MENU_SEPARATOR) {
+                chrome.contextMenus.create({
+                    id: `[separator-${i}]`,
+                    type: "separator",
+                    contexts: ["link"]
+                });
+            }
+            else if (folder) {
                 chrome.contextMenus.create({
                     id: folder,
                     title: folder,

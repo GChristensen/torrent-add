@@ -4,6 +4,10 @@ export const ROOT_FOLDER = "[root]";
 
 export const REFRESH_MENU = "[refresh]";
 
+export const MENU_SEPARATOR = "-";
+
+export const SETTINGS_MENU = "[action-settings]";
+
 export const DEFAULT_SETTINGS = {
     folders: ROOT_FOLDER + ":music:movies:images",
     host: "http://localhost:8080/gui/",

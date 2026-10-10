@@ -71,8 +71,10 @@ export class UTorrentClient extends TorrentClient {
                 headers: this.#makeuTorrentAuthHeaders()
             });
 
-            if (response.ok)
+            if (response.ok) {
                 showNotification("Successfully connected to uTorrent.");
+                result = true;
+            }
         }
         finally {
         }
