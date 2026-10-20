@@ -7,3 +7,4 @@
 *.zip
 /addon/.amo-upload-uuid
 CLAUDE.md
+/.claude/

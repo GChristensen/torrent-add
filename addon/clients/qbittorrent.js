@@ -3,6 +3,7 @@ import {fetchWithTimeout, showNotification} from "../utils.js";
 import {CATEGORY_SOURCE_USER, CATEGORY_SOURCE_USER_CATEGORIES, ROOT_FOLDER} from "../constants.js";
 import {TorrentClient} from "./client_base.js";
 import {downloadToUserCategories} from "./clients.js";
+import {magnetTorrentIDs, torrentFileTorrentIDs} from "./infohash.js";
 
 export class QBittorrentClient extends TorrentClient {
     #adjustHostURL(url) {
@@ -99,7 +100,25 @@ export class QBittorrentClient extends TorrentClient {
         return path;
     }
 
-    async #addTorrent(category, form) {
+    async #torrentExists(ids) {
+        if (!ids.length)
+            return false;
+
+        try {
+            const apiURL = this.#makeAPIURL("torrents", "info") + "?" + new URLSearchParams({hashes: ids.join("|")});
+            const response = await fetch(apiURL);
+
+            if (response.ok)
+                return (await response.json()).length > 0;
+        }
+        catch (e) {
+            console.error(e);
+        }
+
+        return false;
+    }
+
+    async #addTorrent(category, form, getTorrentIDs) {
         try {
             await this.#login();
 
@@ -119,10 +138,16 @@ export class QBittorrentClient extends TorrentClient {
 
             const apiURL = this.#makeAPIURL("torrents", "add");
             const response = await fetch(apiURL, {method: "POST", body: form});
+            // qBittorrent < 5.1 responds with 200 "Fails." when nothing was added, newer versions with 409
+            const failed = !response.ok || (await response.text()) === "Fails.";
 
-            if (!response.ok && settings.notification_mode() === "failure")
-                showNotification("Error adding torrent.");
-            else if (response.ok && settings.notification_mode() === "success")
+            if (failed && settings.notification_mode() !== "never") {
+                if (await this.#torrentExists(await getTorrentIDs()))
+                    showNotification("The torrent is already added.");
+                else
+                    showNotification("Error adding torrent.");
+            }
+            else if (!failed && settings.notification_mode() === "success")
                 showNotification("Successfully added torrent.");
         }
         finally {
@@ -172,13 +197,14 @@ export class QBittorrentClient extends TorrentClient {
     async addMagnet(link, category) {
         const form = new FormData();
         form.append("urls", link);
-        return this.#addTorrent(category, form);
+        return this.#addTorrent(category, form, async () => magnetTorrentIDs(link));
     }
 
     async addTorrent(link, category) {
         if (!this._checkLink(link)) return;
 
         const form = await this._downloadFileAsForm(link, "torrents");
-        return this.#addTorrent(category, form);
+        return this.#addTorrent(category, form,
+            async () => torrentFileTorrentIDs(await form.get("torrents").arrayBuffer()));
     }
 }

@@ -161,3 +161,5 @@ footer a:hover { color: var(--brand-dark); }
 @media (prefers-reduced-motion: reduce) {
   .toast.pop { animation: none; }
 }
+
+.gc-credit a { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; }
