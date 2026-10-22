@@ -1,7 +1,7 @@
 import {settings} from "../settings.js";
 import {createClient, downloadToUserCategories} from "../clients/clients.js";
 import {createContextMenu} from "./context_menu.js";
-import {CATEGORY_SOURCE_USER, MENU_SEPARATOR, REFRESH_MENU, ROOT_FOLDER} from "../constants.js";
+import {BULK_ADD_TITLE, CATEGORY_SOURCE_USER, MENU_SEPARATOR, REFRESH_MENU, ROOT_FOLDER} from "../constants.js";
 
 const $ = selector => document.querySelector(selector);
 const radios = name => document.querySelectorAll(`input[name='${name}']`);
@@ -322,6 +322,9 @@ function renderMenuPreview(categories) {
         element.textContent = text;
         menu.append(element);
     };
+
+    item(BULK_ADD_TITLE, "mi action");
+    item("", "msep");
 
     for (const category of categories)
         if (category === MENU_SEPARATOR)

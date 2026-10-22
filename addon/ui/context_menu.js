@@ -1,5 +1,22 @@
-import {ADDON_NAME, MENU_SEPARATOR, REFRESH_MENU, SETTINGS_MENU} from "../constants.js";
+import {ADDON_NAME, BULK_ADD_MENU, BULK_ADD_TITLE, MENU_SEPARATOR, REFRESH_MENU, SETTINGS_MENU} from "../constants.js";
 import {downloadToUserCategories} from "../clients/clients.js";
+
+function createBulkAddMenu(parentId) {
+    const parent = parentId? {parentId}: {};
+
+    chrome.contextMenus.create({
+        id: BULK_ADD_MENU,
+        ...parent,
+        title: BULK_ADD_TITLE,
+        contexts: ["page", "link"]
+    });
+    chrome.contextMenus.create({
+        id: BULK_ADD_MENU + "-separator",
+        ...parent,
+        type: "separator",
+        contexts: ["link"]
+    });
+}
 
 export async function createContextMenu(categories) {
     await browser.contextMenus.removeAll();
@@ -16,8 +33,9 @@ export async function createContextMenu(categories) {
         chrome.contextMenus.create({
             id: ADDON_NAME,
             title: ADDON_NAME,
-            contexts: ["link"]
+            contexts: ["page", "link"]
         });
+        createBulkAddMenu(ADDON_NAME);
         chrome.contextMenus.create({
             id: REFRESH_MENU,
             parentId: ADDON_NAME,
@@ -29,8 +47,9 @@ export async function createContextMenu(categories) {
         chrome.contextMenus.create({
             id: ADDON_NAME,
             title: ADDON_NAME,
-            contexts: ["link"]
+            contexts: ["page", "link"]
         });
+        createBulkAddMenu(ADDON_NAME);
         chrome.contextMenus.create({
             id: categories[0],
             parentId: ADDON_NAME,
@@ -52,6 +71,8 @@ export async function createContextMenu(categories) {
         }
     }
     else {
+        createBulkAddMenu();
+
         categories.forEach((folder, i) => {
             if (folder === MENU_SEPARATOR) {
                 chrome.contextMenus.create({

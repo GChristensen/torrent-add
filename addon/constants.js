@@ -8,6 +8,9 @@ export const MENU_SEPARATOR = "-";
 
 export const SETTINGS_MENU = "[action-settings]";
 
+export const BULK_ADD_MENU = "[bulk-add]";
+export const BULK_ADD_TITLE = "Bulk Add…";
+
 export const DEFAULT_SETTINGS = {
     folders: ROOT_FOLDER + ":music:movies:images",
     host: "http://localhost:8080/gui/",

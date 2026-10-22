@@ -49,16 +49,43 @@ export class UTorrentClient extends TorrentClient {
         }
     }
 
-    async #makeAPIURL(params) {
+    async #makeAPIURL(params, token) {
         const host = this.#adjustHostURL(settings.host());
-        const token = await this.#getAPIToken(host);
+        token = token || await this.#getAPIToken(host);
         return `${host}?token=${token}&${params}`;
     }
 
-    async #makeActionURL(action, category) {
+    async #makeActionURL(action, category, token) {
         const path = category === ROOT_FOLDER? "": category;
         const params = `action=${action}&download_dir=0${path? "&path=" + path: ""}`;
-        return this.#makeAPIURL(params);
+        return this.#makeAPIURL(params, token);
+    }
+
+    async #addURLRequest(link, category, token) {
+        const apiURL = await this.#makeActionURL("add-url", category, token);
+        const response = await fetch(apiURL + "&s=" +  encodeURIComponent(link), {
+            headers: this.#makeuTorrentAuthHeaders()
+        });
+
+        return response.ok;
+    }
+
+    async #addFileRequest(form, category, token) {
+        const apiURL = await this.#makeActionURL("add-file", category, token);
+        const response = await fetch(apiURL, {
+            method: "POST",
+            body: form,
+            headers: this.#makeuTorrentAuthHeaders()
+        });
+
+        return response.ok;
+    }
+
+    #notifyAdded(ok) {
+        if (!ok && settings.notification_mode() === "failure")
+            showNotification("Error adding torrent.");
+        else if (ok && settings.notification_mode() === "success")
+            showNotification("Successfully added torrent.");
     }
 
     async testConnection() {
@@ -87,15 +114,7 @@ export class UTorrentClient extends TorrentClient {
     }
 
     async addMagnet(link, category) {
-        const apiURL = await this.#makeActionURL("add-url", category);
-        const response = await fetch(apiURL + "&s=" +  encodeURIComponent(link), {
-            headers: this.#makeuTorrentAuthHeaders()
-        });
-
-        if (!response.ok && settings.notification_mode() === "failure")
-            showNotification("Error adding torrent.");
-        else if (response.ok && settings.notification_mode() === "success")
-            showNotification("Successfully added torrent.");
+        this.#notifyAdded(await this.#addURLRequest(link, category));
     }
 
     async addTorrent(link, category) {
@@ -103,18 +122,53 @@ export class UTorrentClient extends TorrentClient {
 
         const form = await this._downloadFileAsForm(link, "torrent_file");
 
-        if (form) {
-            const apiURL = await this.#makeActionURL("add-file", category);
-            const response = await fetch(apiURL, {
-                method: "POST",
-                body: form,
-                headers: this.#makeuTorrentAuthHeaders()
-            });
+        if (form)
+            this.#notifyAdded(await this.#addFileRequest(form, category));
+    }
 
-            if (!response.ok && settings.notification_mode() === "failure")
-                showNotification("Error adding torrent.");
-            else if (response.ok && settings.notification_mode() === "success")
-                showNotification("Successfully added torrent.");
+    // uTorrent adds one torrent per request, so the links are sent one by one with a shared token
+    async addTorrents(links, category, onProgress) {
+        let token;
+        try {
+            token = await this.#getAPIToken(this.#adjustHostURL(settings.host()));
+        }
+        catch (e) {
+            console.error(e);
+        }
+
+        if (!token) {
+            links.forEach(url => onProgress(url, "failed", "Can not access uTorrent."));
+            return;
+        }
+
+        const items = await this._prepareBulkItems(links, onProgress);
+
+        for (const item of items) {
+            if (item.error)
+                continue;
+
+            onProgress(item.url, "sending");
+
+            try {
+                let ok;
+
+                if (item.magnet)
+                    ok = await this.#addURLRequest(item.url, category, token);
+                else {
+                    const form = new FormData();
+                    form.append("torrent_file", item.file.blob, item.file.fileName);
+                    ok = await this.#addFileRequest(form, category, token);
+                }
+
+                if (ok)
+                    onProgress(item.url, "added");
+                else
+                    onProgress(item.url, "failed", "Rejected by uTorrent.");
+            }
+            catch (e) {
+                console.error(e);
+                onProgress(item.url, "failed", "Can not access uTorrent.");
+            }
         }
     }
 }

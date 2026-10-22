@@ -11,7 +11,8 @@ class Settings {
             user: "",
             password: "",
             client: "qbittorrent",
-            notification_mode: "failure"
+            notification_mode: "failure",
+            bulk_filter: {pattern: "", target: "both", regex: false}
         };
 
         this._bin = {};

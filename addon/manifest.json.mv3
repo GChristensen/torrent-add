@@ -30,7 +30,7 @@
     "browser_style": true
   },
 
-  "permissions": ["tabs", "storage", "contextMenus", "notifications", "webRequest", "webRequestBlocking"],
+  "permissions": ["tabs", "storage", "contextMenus", "notifications", "scripting", "webRequest", "webRequestBlocking"],
 
   "host_permissions": ["<all_urls>"],
 

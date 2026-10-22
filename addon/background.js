@@ -1,7 +1,8 @@
 import {settings} from "./settings.js";
-import {createClient} from "./clients/clients.js";
-import {REFRESH_MENU, SETTINGS_MENU} from "./constants.js";
+import {createClient, downloadToUserCategories} from "./clients/clients.js";
+import {BULK_ADD_MENU, MENU_SEPARATOR, REFRESH_MENU, SETTINGS_MENU} from "./constants.js";
 import {createContextMenu} from "./ui/context_menu.js";
+import {showNotification} from "./utils.js";
 
 async function openClientWebUI() {
     await settings.load();
@@ -54,13 +55,124 @@ settings.load().then(async () => {
     await createMenus();
 });
 
+async function injectBulkDialog(tab, frameId = 0) {
+    try {
+        if (browser.scripting)
+            await browser.scripting.executeScript({
+                target: {tabId: tab.id, frameIds: [frameId]},
+                files: ["ui/bulk_add.js"]
+            });
+        else
+            await browser.tabs.executeScript(tab.id, {file: "/ui/bulk_add.js", frameId});
+    }
+    catch (e) {
+        console.error(e);
+        showNotification("Bulk Add is not available on this page.");
+    }
+}
+
 browser.contextMenus.onClicked.addListener(function(info, tab) {
     if (info.menuItemId === SETTINGS_MENU)
         browser.tabs.create({
             "url": browser.runtime.getURL("/ui/options.html"), "active": true
         });
+    else if (info.menuItemId === BULK_ADD_MENU)
+        return injectBulkDialog(tab, info.frameId);
     else if (info.linkUrl)
         return addTorrent(info.linkUrl, info.menuItemId);
+});
+
+async function getBulkCategories() {
+    await settings.load();
+    const categories = await createClient().getTorrentCategories(true);
+    return categories.filter(c => c && c !== MENU_SEPARATOR);
+}
+
+const BULK_FINAL_STATUSES = ["added", "sent", "exists", "failed"];
+
+function notifyBulkSummary({total, added, exists, failed}) {
+    const mode = settings.notification_mode();
+
+    if (mode === "never" || (!failed && mode !== "success"))
+        return;
+
+    const details = [];
+    if (exists)
+        details.push(`${exists} already present`);
+    if (failed)
+        details.push(`${failed} failed`);
+
+    showNotification(`Added ${added} of ${total} torrent${total === 1? "": "s"}`
+        + (details.length? ` (${details.join(", ")}).`: "."));
+}
+
+const bulkHandlers = {
+    async BULK_INIT() {
+        const categories = await getBulkCategories();
+        return {categories, refreshable: !downloadToUserCategories(), filter: settings.bulk_filter()};
+    },
+
+    async BULK_REFRESH() {
+        await createMenus();
+        return {categories: await getBulkCategories()};
+    },
+
+    async BULK_ADD({links, category, filter}, sender) {
+        await settings.load();
+
+        if (filter)
+            await settings.bulk_filter(filter);
+
+        const statuses = new Map(links.map(url => [url, "queued"]));
+        const onProgress = (url, status, detail) => {
+            statuses.set(url, status);
+
+            // the dialog may already be closed
+            try {
+                browser.tabs.sendMessage(sender.tab.id, {type: "BULK_PROGRESS", url, status, detail},
+                    {frameId: sender.frameId})?.catch(() => {});
+            }
+            catch (e) {
+            }
+        };
+
+        let error = "Error adding torrent.";
+        try {
+            await createClient().addTorrents(links, category, onProgress);
+        }
+        catch (e) {
+            console.error(e);
+            error = e.addTorrentMessage || e.message || error;
+        }
+
+        for (const [url, status] of statuses)
+            if (!BULK_FINAL_STATUSES.includes(status))
+                onProgress(url, "failed", error);
+
+        const count = (...names) => [...statuses.values()].filter(s => names.includes(s)).length;
+        const summary = {
+            total: statuses.size,
+            added: count("added", "sent"),
+            exists: count("exists"),
+            failed: count("failed")
+        };
+
+        notifyBulkSummary(summary);
+        return summary;
+    }
+};
+
+browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    const handler = bulkHandlers[message?.type];
+
+    if (handler) {
+        // Chrome does not accept a returned promise here
+        handler(message, sender).then(sendResponse, e => {
+            console.error(e);
+            sendResponse({error: e.message});
+        });
+        return true;
+    }
 });
 
 browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {

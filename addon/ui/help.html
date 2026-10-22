@@ -112,6 +112,27 @@
     </section>
 
     <section class="card">
+        <h2>Adding many torrents at once</h2>
+        <p>Right-click anywhere on a page and choose <span class="ui">Add Torrent To › Bulk Add…</span>.
+            A dialog lists the links of the page that match a filter:</p>
+        <ul>
+            <li>Type a wildcard, such as <code>*.torrent</code> or <code>magnet:*</code>, where <code>*</code>
+                matches any characters and <code>?</code> one character. The whole text or address of the link
+                has to match. Turn on <span class="ui">Regular expression</span> to use a regular expression,
+                such as <code>\.torrent$</code>, instead.</li>
+            <li>Choose whether the filter applies to the <span class="ui">Text</span> of a link, its
+                <span class="ui">URL</span>, or <span class="ui">Both</span>. On many trackers, the address of a
+                download link does not end with <code>.torrent</code>, but its text does.</li>
+            <li>Uncheck the links you don't need, pick a destination on the right, and click
+                <span class="ui">Add</span>.</li>
+        </ul>
+        <p>The dialog then shows the result for each link. Torrents that are already in the client are
+            reported as such, and <span class="ui">Retry failed</span> sends the failed ones again. You can
+            close the dialog at any time; the remaining torrents are still added. The last filter is
+            remembered for the next time.</p>
+    </section>
+
+    <section class="card">
         <h2>Opening the settings</h2>
         <ul>
             <li>Right-click the toolbar button of the add-on and choose <span class="ui">Settings</span>.</li>
