@@ -11,10 +11,10 @@
 
     const TARGETS = [["text", "Text"], ["url", "URL"], ["both", "Both"]];
 
-    const PLACEHOLDER_WILDCARD = "e.g. *.torrent   or   magnet:*";
+    const PLACEHOLDER_WILDCARD = "e.g. .torrent   or   magnet:";
     const PLACEHOLDER_REGEX = "e.g. \\.torrent$   or   ^magnet:";
     const HINT_WILDCARD = "Wildcards: * matches any characters, ? matches one character. "
-        + "The whole text or URL must match; case-insensitive.";
+        + "Matches any part of the text or URL; case-insensitive.";
     const HINT_REGEX = "JavaScript regular expression, case-insensitive, matches anywhere in the text or URL.";
 
     const STATUS = {
@@ -152,6 +152,7 @@
         .row.unchecked .texts { opacity: .55; }
         .texts { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
         .text, .url { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .text.no-text { font-style: italic; color: #5f6368; }
         .url { font: 12px/1.4 ui-monospace, "Cascadia Mono", "SF Mono", Menlo, Consolas, monospace; color: #5f6368; }
         .badge {
             flex: none; padding: 3px 8px; border-radius: 10px;
@@ -282,7 +283,8 @@
         pattern: "",
         target: "both",
         regex: false,
-        unchecked: new Set(),
+        unchecked: new Set(), // filtered links unchecked by the user
+        picked: new Set(),    // unfiltered links checked by the user
         categories: null, // null while loading
         refreshable: false,
         category: null,
@@ -317,21 +319,40 @@
 
             seen.add(url);
 
-            const text = (a.textContent || "").replace(/\s+/g, " ").trim() || a.title || url;
-            result.push({url, text, magnet: /^magnet:/i.test(url)});
+            result.push({url, text: linkText(a), magnet: /^magnet:/i.test(url)});
         }
 
         return result;
     }
 
+    // the visible text of a link, or the text alternatives of an icon-only link; empty if there are none
+    function linkText(a) {
+        const image = a.querySelector("img[alt], img[title]");
+        const candidates = [
+            a.textContent,
+            a.getAttribute("aria-label"),
+            a.title,
+            image?.alt,
+            image?.title
+        ];
+
+        for (const candidate of candidates) {
+            const text = (candidate || "").replace(/\s+/g, " ").trim();
+            if (text)
+                return text;
+        }
+
+        return "";
+    }
+
     function globToRegExp(glob) {
         const source = glob.replace(/[.+^${}()|[\]\\]/g, "\\$&").replace(/\*/g, ".*").replace(/\?/g, ".");
-        return new RegExp("^" + source + "$", "i");
+        return new RegExp(source, "i");
     }
 
     function filterLinks() {
         if (!state.pattern)
-            return {matched: [], error: null};
+            return {matched: links, error: null};
 
         let re;
         try {
@@ -352,7 +373,20 @@
         return {matched, error: null};
     }
 
-    const checkedLinks = () => state.matched.filter(link => !state.unchecked.has(link.url));
+    // Links matching a filter are checked unless unchecked by the user; without a filter all links
+    // are listed, and only those checked by the user are selected.
+    function isChecked(link) {
+        return state.pattern? !state.unchecked.has(link.url): state.picked.has(link.url);
+    }
+
+    function setChecked(link, checked) {
+        if (state.pattern)
+            checked? state.unchecked.delete(link.url): state.unchecked.add(link.url);
+        else
+            checked? state.picked.add(link.url): state.picked.delete(link.url);
+    }
+
+    const checkedLinks = () => state.matched.filter(isChecked);
 
     function renderFilter() {
         const {matched, error} = filterLinks();
@@ -380,7 +414,7 @@
         const fragment = document.createDocumentFragment();
 
         for (const link of state.matched) {
-            const checked = !state.unchecked.has(link.url);
+            const checked = isChecked(link);
 
             const row = document.createElement("label");
             row.className = "row" + (checked? "": " unchecked");
@@ -389,11 +423,7 @@
             checkbox.type = "checkbox";
             checkbox.checked = checked;
             checkbox.addEventListener("change", () => {
-                if (checkbox.checked)
-                    state.unchecked.delete(link.url);
-                else
-                    state.unchecked.add(link.url);
-
+                setChecked(link, checkbox.checked);
                 row.classList.toggle("unchecked", !checkbox.checked);
                 renderSelection();
             });
@@ -402,8 +432,8 @@
             texts.className = "texts";
 
             const text = document.createElement("div");
-            text.className = "text";
-            text.textContent = link.text;
+            text.className = "text" + (link.text? "": " no-text");
+            text.textContent = link.text || "No link text";
 
             const url = document.createElement("div");
             url.className = "url";
@@ -423,7 +453,7 @@
             empty.className = "empty";
             empty.textContent = state.pattern
                 ? "No links match the filter."
-                : "Enter a wildcard or regular expression to list matching links.";
+                : "There are no links on this page.";
             fragment.append(empty);
         }
 
@@ -440,13 +470,13 @@
         selectAll.indeterminate = checked > 0 && checked < matched;
         selectAll.disabled = !matched;
 
-        $("counts").textContent = `${matched} match · ${checked} selected`;
+        $("counts").textContent = `${matched} ${state.pattern? "match": "total"} · ${checked} selected`;
 
         $("add").disabled = !checked || state.category === null;
         $("add").textContent = checked? `Add ${checked}`: "Add";
 
-        $("note").textContent = !state.pattern? "Enter a filter to list links."
-            : !checked? "Select at least one link."
+        $("note").textContent = !checked
+            ? (state.pattern? "Select at least one link.": "Select links, or enter a filter to select matching ones.")
             : state.category === null? "Pick a category to add to."
             : `${checked} torrent${checked === 1? "": "s"} → ${state.category}`;
     }
@@ -686,10 +716,7 @@
 
     $("select-all").addEventListener("change", e => {
         for (const link of state.matched)
-            if (e.target.checked)
-                state.unchecked.delete(link.url);
-            else
-                state.unchecked.add(link.url);
+            setChecked(link, e.target.checked);
 
         renderList();
     });
