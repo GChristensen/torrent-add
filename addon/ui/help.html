@@ -102,8 +102,8 @@
 
     <section class="card">
         <h2>How it works</h2>
-        <p><b>Add Torrent To</b> sends torrent files and magnet links to the web interface of qBittorrent or
-            µTorrent with a single click, directly into the folder or category you choose. This keeps the
+        <p><b>Add Torrent To</b> sends torrent files and magnet links to the web interface of qBittorrent,
+            µTorrent, or Transmission with a single click, directly into the folder or category you choose. This keeps the
             download folder of the client tidy and saves you from moving files around afterwards.</p>
         <p>Right-click a link to a <code>.torrent</code> file or a magnet link, open the
             <span class="ui">Add Torrent To</span> submenu, and pick a destination. The client starts the
@@ -155,8 +155,9 @@
             <li>Click <span class="ui">Test connection</span>. “Connected” means the add-on can reach
                 the client and sign in.</li>
         </ol>
-        <p>The address usually looks like <code>http://localhost:8080/</code> for qBittorrent and
-            <code>http://localhost:8080/gui/</code> for µTorrent. Use the address and port that are set in the
+        <p>The address usually looks like <code>http://localhost:8080/</code> for qBittorrent,
+            <code>http://localhost:8080/gui/</code> for µTorrent, and <code>http://localhost:9091/</code>
+            for Transmission. Use the address and port that are set in the
             client.</p>
     </section>
 
@@ -169,7 +170,7 @@
         <div class="types">
             <div class="type">
                 <h3>Folders</h3>
-                <span class="for">qBittorrent and µTorrent</span>
+                <span class="for">All clients</span>
                 <p>Each name is a subfolder of the default download folder of the client. For example,
                     with the default folder <code>D:\Downloads</code>, choosing <code>Movies</code> saves the
                     torrent to <code>D:\Downloads\Movies</code>.</p>
@@ -267,6 +268,28 @@
 
         <p>µTorrent supports only the <span class="ui">Folders</span> type: its web interface does not let
             add-ons use its labels.</p>
+    </section>
+
+    <section class="card">
+        <h2>Setting up Transmission</h2>
+        <p>In the desktop app, open <span class="ui">Edit › Preferences › Remote</span>, turn on
+            <span class="ui">Allow remote access</span>, and set a user name and password. If the browser
+            runs on another computer, add its address to the list of allowed addresses.</p>
+        <p>With <code>transmission-daemon</code>, stop the daemon first, because it overwrites its
+            settings when it exits. Then set these keys in its <code>settings.json</code> and start it
+            again:</p>
+        <ul>
+            <li><code>rpc-enabled</code>: <code>true</code></li>
+            <li><code>rpc-authentication-required</code>: <code>true</code>, with
+                <code>rpc-username</code> and <code>rpc-password</code></li>
+            <li><code>rpc-whitelist</code>: the addresses allowed to connect, such as
+                <code>127.0.0.1,192.168.*.*</code></li>
+            <li><code>rpc-host-whitelist</code>: the host name you use in the address, if it is not
+                an IP address or <code>localhost</code></li>
+        </ul>
+        <p>The <span class="ui">Folders</span> you add in the add-on are subfolders of the default download
+            folder of Transmission (<code>download-dir</code>). Transmission supports only the
+            <span class="ui">Folders</span> type.</p>
     </section>
 
     <footer class="foot">

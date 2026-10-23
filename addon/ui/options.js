@@ -78,15 +78,18 @@ async function onClientChanged(e) {
 }
 
 async function configureClient() {
-    const uTorrent = getRadio("client") === "utorrent";
+    const client = getRadio("client");
+    // only qBittorrent has categories
+    const foldersOnly = client !== "qbittorrent";
 
-    $("#host").placeholder = uTorrent
-        ? "For example: http://localhost:8080/gui/"
-        : "For example: http://localhost:8080/";
+    $("#host").placeholder = {
+        utorrent: "For example: http://localhost:8080/gui/",
+        transmission: "For example: http://localhost:9091/"
+    }[client] || "For example: http://localhost:8080/";
 
-    radios("category-source").forEach(r => r.disabled = uTorrent && r.value !== CATEGORY_SOURCE_USER);
+    radios("category-source").forEach(r => r.disabled = foldersOnly && r.value !== CATEGORY_SOURCE_USER);
 
-    if (uTorrent && getRadio("category-source") !== CATEGORY_SOURCE_USER) {
+    if (foldersOnly && getRadio("category-source") !== CATEGORY_SOURCE_USER) {
         setRadio("category-source", CATEGORY_SOURCE_USER);
         await settings.category_source(CATEGORY_SOURCE_USER);
     }

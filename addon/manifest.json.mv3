@@ -5,7 +5,7 @@
 
   "homepage_url": "https://gchristensen.github.io/torrent-add/",
 
-  "description": "Instantly add torrents to a customizable set of directories in uTorrent or qBittorrent.",
+  "description": "Instantly add torrents to a customizable set of directories in uTorrent, qBittorrent or Transmission.",
 
   "browser_specific_settings": {
     "gecko": {
